@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProductController!{% endblock %}
+
+{% block body %}
+<div style="padding: 80px; margin: 20px; border: 1px solid #ccc; border-radius: 5px;">
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const nettoInput = document.getElementById('product_cenaNetto');
+        const vatInput = document.getElementById('product_vat');
+        const bruttoInput = document.getElementById('product_cenaBrutto');
+
+        function updateCenaBrutto() {
+            const netto = parseFloat(nettoInput.value) || 0;
+            const vat = parseFloat(vatInput.value) || 0;
+            bruttoInput.value = (netto + (netto * vat / 100)).toFixed(2);
+        }
+
+        nettoInput.addEventListener('input', updateCenaBrutto);
+        vatInput.addEventListener('input', updateCenaBrutto);
+    });
+</script>
+<h1 class="mt-20 mb-10">Nowy produkt</h1>
+
+<table  class="border-collapse border border-slate-400">
+ {{ form_start(form) }}
+
+            <tr><td class="border-collapse border border-slate-400"> {{ form_row(form.nazwaProduktu) }}</td>
+            <td class="border-collapse border border-slate-400"> {{ form_row(form.amount) }}</td>
+            <td class="border-collapse border border-slate-400"> {{ form_row(form.cenaNetto) }}</td>
+            <td class="border-collapse border border-slate-400"> {{ form_row(form.vat) }}</td>
+            <td class="border-collapse border border-slate-400"> {{ form_row(form.cenaBrutto) }}</td></tr>
+
+
+
+
+       <tr class="border-collapse border border-slate-400"><td>
+       <button type="submit" class="btn btn-primary bg-slate-800">Zapisz</button></td></tr>
+    {{ form_end(form) }}
+    </table>
+    <div class="text-right"
+<button class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset">
+<a href={{ path('product_list')}}>LISTA PRODUKTÓW</a>
+    </div>
+{% endblock %}
+

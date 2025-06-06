@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista produktów{% endblock %}
+
+{% block body %}
+<div class="bg-blue-500 text-white p-4 text-center">Moja testowa aplikacja</div>
+
+<div class="px-30 ... bg-blue-500">
+  <h1 class="text-blue-600 dark:text-sky-400">
+    Lista produktów
+  </h1>
+<form method="post" action="{{ path('product_edit_or_delete') }}" enctype="multipart/form-data">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Lp</th>
+                <th>Zdjęcie</th>
+                <th>Dodaj zdjęcie</th>
+                <th>Usuń zdjęcie</th>
+                <th>Nazwa produktu</th>
+                <th>Ilość</th>
+                <th>Cena netto</th>
+                <th>VAT (%)</th>
+                <th>Cena brutto</th>
+                <th>Wartość</th>
+                <th>Usuń</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td style="border: thick double #32a1ce;">{{ product.id}}</td>
+                    <td style="border: thick double #32a1ce;">{{ loop.index }}</td>
+                    <td>
+                        {% if product.imageFilename %}
+                            <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" alt="zdjęcie" width="80">
+                        {% else %}
+                            brak
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not product.imageFilename %}
+                            <input type="file" name="product_images[{{ product.id }}]">
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if product.imageFilename %}
+                            <input type="checkbox" name="remove_image[]" value="{{ product.id }}">
+                        {% endif %}
+                    </td>
+                    <td style="border: thick double #32a1ce;">
+                        <input type="text" name="products[{{ product.id }}][nazwaProduktu]" value="{{ product.nazwaProduktu }}" class="form-control">
+                    </td>
+                   <td style="border: thick double #32a1ce;">
+                        {# <input type="number" step="1" name="products[{{ product.id }}][amount]" value="{{ product.amount }}" class="form-control"> #}
+                          <input type="number" step="1"  name="products[{{ product.id }}][amount]" value="{{ product.amount }}" class="form-control" 
+           min="0">
+                       
+                    </td>
+
+                    <td style="border: thick double #32a1ce;">
+                        <input type="number" step="0,01" name="products[{{ product.id }}][cenaNetto]" value="{{ product.cenaNetto }}" class="form-control">
+                    </td>
+                    <td style="border: thick double #32a1ce;">
+                        <input type="number" step="1" name="products[{{ product.id }}][vat]" value="{{ product.vat }}" class="form-control">
+                    </td>
+                    <td style="border: thick double #32a1ce;">{{ (product.cenaNetto + (product.cenaNetto * product.vat / 100))|number_format(2, '.', ',') }}</td>
+                    <td style="border: thick double #32a1ce;">
+                     {{ ((product.cenaNetto + (product.cenaNetto * product.vat / 100)) * product.amount)|number_format(2, '.', ',') }}
+                    </td>
+                    <td style="border: thick double #32a1ce;">
+                    <input type="checkbox" name="to_delete[]" value="{{ product.id }}">
+                    </td>
+                    
+                    
+                </tr>
+               
+
+                
+            {% else %}
+            
+                <tr>
+                    <td colspan="6">Brak produktów w bazie danych.</td>
+                </tr>
+            {% endfor %}
+         
+        </tbody>
+           
+    </table>
+<div class="bg-lime-800 text-black  text-center"> 
+        <tr class="bg-blue-500" >
+            <td  colspan="3">Wartość produktów brutto:</td>
+            <!-- colspan powinien być równy liczbie kolumn minus 1 -->
+            <td>{{ totalValue|number_format(2, ',', ' ') }} zł</td>
+        </tr>
+        </div>
+    <button type="submit" name="action" value="update" class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset">Zapisz zmiany</button>
+    <button type="submit" name="action" value="delete" class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset">Usuń zaznaczone</button>
+    <button class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset"><a href={{ path('product_new')}}>Dodaj</a></button>
+    <button class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset"><a href={{ path('app_test')}}>Testy php</a></button>
+</form>
+</div>
+{% endblock %}
