@@ -25,5 +25,22 @@
         "postcss": "^8.5.3",
         "postcss-loader": "^8.1.1",
         "tailwindcss": "^4.1.7"
-    }
+    },
+    "name": "5",
+    "version": "1.0.0",
+    "description": "",
+    "main": "webpack.config.js",
+    "directories": {
+        "test": "tests"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Mcgregorhys/5.git"
+    },
+    "keywords": [],
+    "author": "",
+    "bugs": {
+        "url": "https://github.com/Mcgregorhys/5/issues"
+    },
+    "homepage": "https://github.com/Mcgregorhys/5#readme"
 }
