@@ -7,6 +7,9 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 }
 
 Encore
+    .configureLoaderRule('js', (loaderRule) => {
+    loaderRule.test = /\.(mjs|js)$/;
+    loaderRule.type = 'javascript/auto'})
     .enablePostCssLoader()
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
@@ -55,10 +58,11 @@ Encore
     // })
 
     // enables and configure @babel/preset-env polyfills
-    .configureBabelPresetEnv((config) => {
-        config.useBuiltIns = 'usage';
-        config.corejs = '3.38';
-    })
+    
+    .enableSingleRuntimeChunk()
+    .cleanupOutputBeforeBuild()
+    .enableSourceMaps(!Encore.isProduction())
+    .enableVersioning(Encore.isProduction());
 
     // enables Sass/SCSS support
     //.enableSassLoader()
