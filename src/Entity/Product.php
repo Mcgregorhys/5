@@ -39,6 +39,9 @@ class Product
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $value = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $netto_minus30 = null;
+
     
 
     
@@ -141,6 +144,18 @@ class Product
     {
     $this->imageFilename = $imageFilename;
     return $this;
+    }
+
+    public function getNettoMinus30(): ?string
+    {
+        return $this->netto_minus30;
+    }
+
+    public function setNettoMinus30(string $netto_minus30): static
+    {
+        $this->netto_minus30 = $netto_minus30;
+
+        return $this;
     }
 
     
