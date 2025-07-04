@@ -5,80 +5,87 @@
 {% block body %}
 <div class="bg-blue-500 text-white p-4 text-center">Moja testowa aplikacja</div>
 
-<div class="px-30 ... bg-blue-500">
+
+
+<div class="px-30 ... bg-blue-00">
   <h1 class="text-blue-600 dark:text-sky-400">
     Lista produktów
   </h1>
 <form method="post" action="{{ path('product_edit_or_delete') }}" enctype="multipart/form-data">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Lp</th>
-                <th>Zdjęcie</th>
-                <th>Dodaj zdjęcie</th>
-                <th>Usuń zdjęcie</th>
-                <th>Nazwa produktu</th>
-                <th>Ilość</th>
-                <th>Cena netto</th>
-                <th>VAT (%)</th>
-                <th>Cena brutto</th>
-                <th>Wartość</th>
-                <th>Usuń</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in products %}
-                <tr>
-                    <td style="border: thick double #32a1ce;">{{ product.id}}</td>
-                    <td style="border: thick double #32a1ce;">{{ loop.index }}</td>
-                    <td>
-                        {% if product.imageFilename %}
-                            <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" alt="zdjęcie" width="80">
-                        {% else %}
-                            brak
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if not product.imageFilename %}
-                            <input type="file" name="product_images[{{ product.id }}]">
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if product.imageFilename %}
-                            <input type="checkbox" name="remove_image[]" value="{{ product.id }}">
-                        {% endif %}
-                    </td>
-                    <td style="border: thick double #32a1ce;">
-                        <input type="text" name="products[{{ product.id }}][nazwaProduktu]" value="{{ product.nazwaProduktu }}" class="form-control">
-                    </td>
-                   <td style="border: thick double #32a1ce;">
-                        {# <input type="number" step="1" name="products[{{ product.id }}][amount]" value="{{ product.amount }}" class="form-control"> #}
-                          <input type="number" step="1"  name="products[{{ product.id }}][amount]" value="{{ product.amount }}" class="form-control" 
-           min="0">
-                       
-                    </td>
-
-                    <td style="border: thick double #32a1ce;">
-                        <input type="number" step="0,01" name="products[{{ product.id }}][cenaNetto]" value="{{ product.cenaNetto }}" class="form-control">
-                    </td>
-                    <td style="border: thick double #32a1ce;">
-                        <input type="number" step="1" name="products[{{ product.id }}][vat]" value="{{ product.vat }}" class="form-control">
-                    </td>
-                    <td style="border: thick double #32a1ce;">{{ (product.cenaNetto + (product.cenaNetto * product.vat / 100))|number_format(2, '.', ',') }}</td>
-                    <td style="border: thick double #32a1ce;">
-                     {{ ((product.cenaNetto + (product.cenaNetto * product.vat / 100)) * product.amount)|number_format(2, '.', ',') }}
-                    </td>
-                    <td style="border: thick double #32a1ce;">
-                    <input type="checkbox" name="to_delete[]" value="{{ product.id }}">
-                    </td>
-                    
-                    
-                </tr>
+<style>
+ 
+</style>
+<div class="table-container">
+    <table class="responsive-table">
+    <thead>
+        <tr>
+            <th class="w-auto">ID</th>
+            <th class="w-auto">Lp</th>
+            <th class="w-auto">Zdjecie</th>
+            <th class="w-auto">Dodaj zdjęcie</th>
+            <th class="w-auto">Usuń zdjęcie</th>
+            <th class="min-w-[200px]">Nazwa produktu</th>
+            <th class="w-auto">Ilość</th>
+            <th class="w-auto">Cena netto</th>
+            <th class="w-auto">VAT (%)</th>
+            <th class="w-auto">Cena brutto</th>
+            <th class="w-auto">Wartość</th>
+            <th class="w-auto">Minus 30%</th>
+            <th class="w-auto">Usuń</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td class="border-4 border-double border-blue-400 p-2">{{ product.id}}</td>
+            <td class="border-4 border-double border-blue-400 p-2">{{ loop.index }}</td>
+            <td class="p-2">
+                {% if product.imageFilename %}
+                    <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" alt="zdjęcie" class="max-w-[100px]">
+                {% else %}
+                    brak
+                {% endif %}
+            </td>
+            <td class="p-2">
+                {% if not product.imageFilename %}
+                    <input type="file" name="product_images[{{ product.id }}]" class="auto-input">
+                {% endif %}
+            </td>
+            <td class="p-2">
+                {% if product.imageFilename %}
+                    <input type="checkbox" name="remove_image[]" value="{{ product.id }}" class="auto-input">
+                {% endif %}
+            </td>
+           <td class="border-4 border-double border-blue-400 p-2 align-top max-w-[200px]">
+  <div class="w-full break-words whitespace-pre-wrap bg-transparent border-none">
+    {{ product.nazwaProduktu }}
+    <input type="hidden" name="products[{{ product.id }}][nazwaProduktu]" 
+           value="{{ product.nazwaProduktu }}">
+  </div>
+</td>
+            <td class="border-4 border-double border-blue-400 p-2">
+                <input type="number" step="1"  name="products[{{ product.id }}][amount]" value="{{ product.amount }}" class="auto-input">           
+            </td>
+            <td class="border-4 border-double border-blue-400 p-2">
+                <input type="number" step="0,01" name="products[{{ product.id }}][cenaNetto]" value="{{ product.cenaNetto }}" class="auto-input">
+            </td>
+            <td class="border-4 border-double border-blue-400 p-2">
+                <input type="number" step="1" name="products[{{ product.id }}][vat]" value="{{ product.vat }}"class="auto-input">
+            </td>
+            <td class="border-4 border-double border-blue-400 p-2 w-full min-w-[100px]">
+                {{ (product.cenaNetto + (product.cenaNetto * product.vat / 100))|number_format(2, '.', ',') }}
+            </td>
+            <td class="border-4 border-double border-blue-400 p-2">
+                {{ ((product.cenaNetto + (product.cenaNetto * product.vat / 100)) * product.amount)|number_format(2, '.', ',') }}
+            </td>
+            <td class="border-4 border-double border-blue-400 p-2">
+                <input   name="products[{{ product.id }}][nettoMinus30]" value="{{ product.nettoMinus30 }}" readonly class="auto-input">
+            </td>
+            <td class="border-4 border-double border-blue-400 p-2">
+                    <input type="checkbox" name="to_delete[]" value="{{ product.id }}" class="auto-input[readonly]">
+            </td>     
+        </tr>
                
-
-                
             {% else %}
             
                 <tr>
@@ -88,7 +95,8 @@
          
         </tbody>
            
-    </table>
+    </table>   
+    </div>                                       
 <div class="bg-lime-800 text-black  text-center"> 
         <tr class="bg-blue-500" >
             <td  colspan="3">Wartość produktów brutto:</td>

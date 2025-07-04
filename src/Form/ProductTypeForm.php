@@ -42,6 +42,13 @@ class ProductTypeForm extends AbstractType
         'mapped' => false, // Pole nie jest mapowane na encję
         'attr' => ['readonly' => true], // Pole jest tylko do odczytu
     ])
+
+    ->add('nettoMinus30', NumberType::class, [
+        'label' => 'Cena netto - 30%',
+        'mapped' => false, // Pole nie jest mapowane na encję
+        'attr' => ['readonly' => true], // Pole jest tylko do odczytu
+    ])
+
     //dodanie pola do przesyłania pliku obrazu
     ->add('imageFile', FileType::class, [
         'label' => 'Zdjęcie produktu',

@@ -44,6 +44,7 @@ class ProductController extends AbstractController
             $amount = $product->getAmount();
             $product->setAmount( $amount);
             $product->setValue($cenaNetto * $amount);
+            $product->setNettoMinus30(netto_minus30: $cenaNetto - ($cenaNetto * 0.3));
             $product->setLp(0);
             //zapis do bazy danych (jeśli używane jest Doctrine)
             $entityManager->persist($product);
@@ -146,6 +147,7 @@ public function editOrDelete(Request $request, EntityManagerInterface $entityMan
                 $product->setNazwaProduktu($data['nazwaProduktu']);
                 $product->setCenaNetto((float)$data['cenaNetto']);
                 $product->setVat((int)$data['vat']);
+                $product->setNettoMinus30($product->getCenaNetto() - ($product->getCenaNetto() * 0.3));
                 
                 // Aktualizacja amount z walidacją
                 $amount = (int)$data['amount'];

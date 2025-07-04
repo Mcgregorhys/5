@@ -1,4 +1,50 @@
-/* body {
+@import "tailwindcss";
+ body {
     background-color: lightgray;
-} */
- @import "tailwindcss";
+} 
+   .responsive-table {
+    width: 100%;
+    max-width: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+  }
+  
+  .responsive-table td, .responsive-table th {
+    padding: 0.5rem;
+    border: 4px double #32a1ce;
+    white-space: nowrap;
+  }
+  
+  .auto-input {
+    display: block;
+    width: 100%;
+    min-width: 50px;
+    max-width: 100%;
+    background: transparent;
+    border: none;
+    padding: 0.25rem;
+    box-sizing: border-box;
+  }
+  
+  /* Dla wąskich ekranów - przewijanie poziome */
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  /* .wrap-input-container {
+    display: grid;
+  }
+  .wrap-input-container::after {
+    content: attr(data-value);
+    visibility: hidden;
+    white-space: pre-wrap;
+    padding: 0.25rem;
+  }
+  .wrap-input {
+    width: 100%;
+    grid-area: 1 / 1;
+    background: transparent;
+    border: none;
+    padding: 0.25rem;
+  } */
