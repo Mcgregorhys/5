@@ -56,13 +56,27 @@
                     <input type="checkbox" name="remove_image[]" value="{{ product.id }}" class="auto-input">
                 {% endif %}
             </td>
-           <td class="border-4 border-double border-blue-400 p-2 align-top max-w-[200px]">
-  <div class="w-full break-words whitespace-pre-wrap bg-transparent border-none">
-    {{ product.nazwaProduktu }}
-    <input type="hidden" name="products[{{ product.id }}][nazwaProduktu]" 
-           value="{{ product.nazwaProduktu }}">
-  </div>
-</td>
+           {# <td class="border-4 border-double border-blue-400 p-2 align-top max-w-[200px]">
+                <div class="w-full break-words whitespace-pre-wrap bg-transparent border-none">{{ product.nazwaProduktu }}
+                    <input type="hidden" step="1" name="products[{{ product.id }}][nazwaProduktu]" value="{{ product.nazwaProduktu }}">
+                </div>
+            </td> #}
+            <td class="border-4 border-double border-blue-400 p-2 align-top">
+                <textarea name="products[{{ product.id }}][nazwaProduktu]"
+                class="w-full min-h-[40px] bg-white border-none focus:ring-2 focus:ring-blue-300 rounded resize-none overflow-hidden whitespace-normal break-all hyphens-auto" rows="1">
+                {{ product.nazwaProduktu }}</textarea>
+            </td>
+            <script>
+                    // Auto-resize + focus na edycję
+                    document.querySelectorAll('textarea').forEach(el => {
+                    el.style.height = 'auto';
+                    el.style.height = el.scrollHeight + 'px';
+                    el.addEventListener('input', function() {
+                        this.style.height = 'auto';
+                        this.style.height = this.scrollHeight + 'px';
+                    });
+                });
+            </script>
             <td class="border-4 border-double border-blue-400 p-2">
                 <input type="number" step="1"  name="products[{{ product.id }}][amount]" value="{{ product.amount }}" class="auto-input">           
             </td>

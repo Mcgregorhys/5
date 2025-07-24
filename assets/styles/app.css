@@ -32,7 +32,7 @@
     overflow-x: auto;
   }
 
-  /* .wrap-input-container {
+  .wrap-input-container {
     display: grid;
   }
   .wrap-input-container::after {
@@ -47,4 +47,4 @@
     background: transparent;
     border: none;
     padding: 0.25rem;
-  } */
+  }
