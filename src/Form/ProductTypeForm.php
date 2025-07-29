@@ -17,6 +17,10 @@ class ProductTypeForm extends AbstractType
     {
 
     $builder
+    ->add('kod', NumberType::class, [
+        'label' => 'Kod produktu',
+        'required' => true,
+    ])
     ->add('nazwaProduktu', TextType::class, [
         'label' => 'Nazwa produktu',
     ])
@@ -32,16 +36,16 @@ class ProductTypeForm extends AbstractType
         'label' => 'VAT (%)',
         'attr' => ['step' => '0.01'],
     ])
-    ->add('cenaBrutto', NumberType::class, [
-        'label' => 'Cena brutto',
-        'mapped' => false, // Pole nie jest mapowane na encję
-        'attr' => ['readonly' => true], // Pole jest tylko do odczytu
-    ])
-    ->add('wartoscMagazynowa', NumberType::class, [
-        'label' => 'Wartość magazynowa',
-        'mapped' => false, // Pole nie jest mapowane na encję
-        'attr' => ['readonly' => true], // Pole jest tylko do odczytu
-    ])
+    // ->add('cenaBrutto', NumberType::class, [
+    //     'label' => 'Cena brutto',
+    //     'mapped' => false, // Pole nie jest mapowane na encję
+    //     'attr' => ['readonly' => true], // Pole jest tylko do odczytu
+    // ])
+    // ->add('wartoscMagazynowa', NumberType::class, [
+    //     'label' => 'Wartość magazynowa',
+    //     'mapped' => false, // Pole nie jest mapowane na encję
+    //     'attr' => ['readonly' => true], // Pole jest tylko do odczytu
+    // ])
     //dodanie pola do przesyłania pliku obrazu
     ->add('imageFile', FileType::class, [
         'label' => 'Zdjęcie produktu',
@@ -54,7 +58,8 @@ class ProductTypeForm extends AbstractType
                 'mimeTypesMessage' => 'Dodaj poprawny plik JPG lub PNG.',
             ]),
         ],
-    ]);
+    ])
+    ;
 }
 
  function configureOptions(OptionsResolver $resolver): void

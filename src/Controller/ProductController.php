@@ -44,9 +44,9 @@ class ProductController extends AbstractController
             $amount = $product->getAmount();
             $product->setAmount( $amount);
             $product->setValue($cenaNetto * $amount);
-            $product->setNettoMinus30(netto_minus30: $cenaNetto - ($cenaNetto * 0.3));
+            // $product->setNettoMinus30(netto_minus30: $cenaNetto - ($cenaNetto * 0.3));
             $product->setLp(0);
-            //zapis do bazy danych (jeśli używane jest Doctrine)
+            // zapis do bazy danych (jeśli używane jest Doctrine)
             $entityManager->persist($product);
             $entityManager->flush();
 
@@ -75,6 +75,38 @@ class ProductController extends AbstractController
         }
 
         return $this ->render('product/list.html.twig', [
+            'products'=> $products,
+            'totalValue' => $totalValue,
+        ]);
+    }
+
+    #[Route('/discounts', name: 'product_discounts')]
+    public function listDiscounts(EntityManagerInterface $entityManager): Response
+    {
+        //pobranie wszystkich produktów z bazy danych
+        $products = $entityManager->getRepository(Product::class)->findAll();
+        //Renderowanie widoku i przekazanie produktów
+
+          // Ustawienie liczby porządkowej
+        $lp = 1;
+        $totalValue = 0;
+        foreach ($products as $product) {
+            $product->setLp($lp++);
+            $totalValue += $product->getValue();
+        }
+        // Obliczenie wartości z rabatem
+        foreach ($products as $product) {
+            $cenaNetto = $product->getCenaNetto();
+            $vat = $product->getVat();
+            $product->setCenaBrutto($cenaNetto + ($cenaNetto * $vat / 100));
+            $product->setNettoMinus20($cenaNetto - ($cenaNetto * 0.2));
+            $product->setNettoMinus30($cenaNetto - ($cenaNetto * 0.3));
+            // Obliczenie wartości w EUR z rabatem
+            $product->setEurMinus20($product->getCenaBrutto() * 0.8);
+            $product->setEurMinus30($product->getCenaBrutto() * 0.7);
+        }
+
+        return $this ->render('product/list_discounts.html.twig', [
             'products'=> $products,
             'totalValue' => $totalValue,
         ]);
@@ -144,6 +176,7 @@ public function editOrDelete(Request $request, EntityManagerInterface $entityMan
 
             if ($product) {
                 // Aktualizacja podstawowych pól
+                $product->setKod((int)$data['kod']);
                 $product->setNazwaProduktu($data['nazwaProduktu']);
                 $product->setCenaNetto((float)$data['cenaNetto']);
                 $product->setVat((int)$data['vat']);

@@ -16,6 +16,9 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $lp = null;
 
+     #[ORM\Column(length: 255)]
+    private ?string $kod = null;
+
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $imageFilename = null;
     
@@ -42,6 +45,17 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $netto_minus30 = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $netto_minus20 = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $eur_minus20 = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $eur_minus30 = null;
+
+   
+
     
 
     
@@ -61,6 +75,18 @@ class Product
     public function setLp(string $lp): static
     {
         $this->lp = $lp;
+
+        return $this;
+    }
+
+    public function getKod(): ?string
+    {
+        return $this->kod;
+    }
+
+    public function setKod(string $kod): static
+    {
+        $this->kod = $kod;
 
         return $this;
     }
@@ -157,6 +183,44 @@ class Product
 
         return $this;
     }
+
+    public function getNettoMinus20(): ?string
+    {
+        return $this->netto_minus20;
+    }
+
+    public function setNettoMinus20(string $netto_minus20): static
+    {
+        $this->netto_minus20 = $netto_minus20;
+
+        return $this;
+    }
+
+    public function getEurMinus20(): ?string
+    {
+        return $this->eur_minus20;
+    }
+
+    public function setEurMinus20(string $eur_minus20): static
+    {
+        $this->eur_minus20 = $eur_minus20;
+
+        return $this;
+    }
+
+    public function getEurMinus30(): ?string
+    {
+        return $this->eur_minus30;
+    }
+
+    public function setEurMinus30(string $eur_minus30): static
+    {
+        $this->eur_minus30 = $eur_minus30;
+
+        return $this;
+    }
+
+    
 
     
    
