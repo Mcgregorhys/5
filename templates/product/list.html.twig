@@ -58,12 +58,8 @@
                 {% endif %}
             </td>
            <td class="border-4 border-double border-blue-400 p-2 align-top max-w-[200px]">
-  <div class="w-full break-words whitespace-pre-wrap bg-transparent border-none">
-    {{ product.nazwaProduktu }}
-    <input type="hidden" name="products[{{ product.id }}][nazwaProduktu]" 
-           value="{{ product.nazwaProduktu }}">
-  </div>
-</td>
+                <input type="text" name="products[{{ product.id }}][nazwaProduktu]" value="{{ product.nazwaProduktu }}" class="auto-input">
+            </td>
             <td class="border-4 border-double border-blue-400 p-2">
                 <input type="number" step="1"  name="products[{{ product.id }}][amount]" value="{{ product.amount }}" class="auto-input">           
             </td>
@@ -82,7 +78,9 @@
            
             <td class="border-4 border-double border-blue-400 p-2">
                     <input type="checkbox" name="to_delete[]" value="{{ product.id }}" class="auto-input[readonly]">
-            </td>     
+            </td>   
+       
+            
         </tr>
                
             {% else %}
@@ -100,13 +98,15 @@
         <tr class="bg-blue-500" >
             <td  colspan="3">Wartość produktów brutto:</td>
             <!-- colspan powinien być równy liczbie kolumn minus 1 -->
-            <td>{{ totalValue|number_format(2, ',', ' ') }} zł</td>
+            {# <td>{{ totalValue|number_format(2, ',', ' ') }} zł</td> #}
         </tr>
         </div>
     <button type="submit" name="action" value="update" class="button">Zapisz zmiany</button>
     <button type="submit" name="action" value="delete" class="button">Usuń zaznaczone</button>
     <button class="button"><a href={{ path('product_new')}}>Dodaj</a></button>
     <button class="button"><a href={{ path('product_discounts')}}>Upusty</a></button>
+    <button class="button"><a href={{ path('product_param')}}>Parametry</a></button>
+    
 </form>
 </div>
 {% endblock %}

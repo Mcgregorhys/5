@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use App\Enum\ShippingOption;
 use Doctrine\ORM\Mapping as ORM;
+
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -16,13 +18,11 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $lp = null;
 
-     #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255)]
     private ?string $kod = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $imageFilename = null;
-    
-
 
     #[ORM\Column(length: 255)]
     private ?string $nazwaProduktu = null;
@@ -56,11 +56,41 @@ class Product
 
    
 
-    
-
-    
-
+   /************typ wyliczeniowy */
    
+
+#[ORM\Column(type: 'string', enumType: ShippingOption::class, nullable: true)]
+private  $shippingOption = null;
+
+// Gettery i settery
+public function getShippingOption(): ?ShippingOption
+{
+    return $this->shippingOption;
+}
+
+public function setShippingOption($shippingOption): void
+{
+    // Jeśli to już obiekt enum - po prostu przypisz
+    if ($shippingOption instanceof ShippingOption) {
+        $this->shippingOption = $shippingOption;
+        return;
+    }
+
+    // Jeśli to string - konwertuj tylko jeśli nie jest pusty
+    if (is_string($shippingOption) && $shippingOption !== '') {
+        // Ręczne przypisanie bez użycia from()/tryFrom()
+        foreach (ShippingOption::cases() as $case) {
+            if ($case->value === $shippingOption) {
+                $this->shippingOption = $case;
+                return;
+            }
+        }
+    }
+
+    // Dla wszystkich innych przypadków ustaw null
+    $this->shippingOption = null;
+}
+/************end typ wyliczeniowy */
 
     public function getId(): ?int
     {
@@ -220,8 +250,25 @@ class Product
         return $this;
     }
 
-    
+    public function getDomesticShipping(): ?ShippingOption
+    {
+        return $this->domesticShipping;
+    }
 
-    
-   
+    public function setDomesticShipping(?ShippingOption $domesticShipping): static
+    {
+        $this->domesticShipping = $domesticShipping;
+        return $this;
+    }
+
+    public function getInternationalShipping(): ?ShippingOption
+    {
+        return $this->internationalShipping;
+    }
+
+    public function setInternationalShipping(?ShippingOption $internationalShipping): static
+    {
+        $this->internationalShipping = $internationalShipping;
+        return $this;
+    }
 }

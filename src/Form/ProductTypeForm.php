@@ -10,6 +10,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
+use App\Enum\ShippingOption;
+
 
 class ProductTypeForm extends AbstractType
 {
@@ -36,17 +39,13 @@ class ProductTypeForm extends AbstractType
         'label' => 'VAT (%)',
         'attr' => ['step' => '0.01'],
     ])
-    // ->add('cenaBrutto', NumberType::class, [
-    //     'label' => 'Cena brutto',
-    //     'mapped' => false, // Pole nie jest mapowane na encję
-    //     'attr' => ['readonly' => true], // Pole jest tylko do odczytu
-    // ])
-    // ->add('wartoscMagazynowa', NumberType::class, [
-    //     'label' => 'Wartość magazynowa',
-    //     'mapped' => false, // Pole nie jest mapowane na encję
-    //     'attr' => ['readonly' => true], // Pole jest tylko do odczytu
-    // ])
-    //dodanie pola do przesyłania pliku obrazu
+  
+    // ->add('shippingOption', EnumType::class, [
+    // 'class' => ShippingOption::class,
+    // 'invalid_message' => 'Nieprawidłowa opcja transportu',
+    // 'required' => false
+    // ,])
+    
     ->add('imageFile', FileType::class, [
         'label' => 'Zdjęcie produktu',
         'mapped' => false, // ważne!
@@ -61,6 +60,8 @@ class ProductTypeForm extends AbstractType
     ])
     ;
 }
+
+
 
  function configureOptions(OptionsResolver $resolver): void
 {

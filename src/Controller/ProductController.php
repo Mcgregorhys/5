@@ -10,6 +10,7 @@ use App\Entity\Product;
 use App\Form\ProductTypeForm;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Enum\ShippingOption;
 
 class ProductController extends AbstractController
 {
@@ -18,6 +19,9 @@ class ProductController extends AbstractController
     {
         //tworzę zminną produkt jako nowy obiekt klasy produkt
         $product = new Product();
+
+        $product->setShippingOption(ShippingOption::DOMESTIC); // Domyślnie "Transport krajowy"
+        
         //tworzę zmienną form i przypisuję ją do metody createform i przekazuję jako argumenty klasę ProductType oraz product
         $form = $this->createForm(ProductTypeForm::class, $product);
         $form->handleRequest($request);
@@ -35,8 +39,6 @@ class ProductController extends AbstractController
             $product->setImageFilename($newFilename);
         }
 
-
-
             //Wyliczenie ceny brutto
             $cenaNetto = $product ->getCenaNetto();
             $vat = $product -> getVat();
@@ -44,12 +46,18 @@ class ProductController extends AbstractController
             $amount = $product->getAmount();
             $product->setAmount( $amount);
             $product->setValue($cenaNetto * $amount);
-            // $product->setNettoMinus30(netto_minus30: $cenaNetto - ($cenaNetto * 0.3));
+            $product->setNettoMinus30(netto_minus30: $cenaNetto - ($cenaNetto * 0.3));
             $product->setLp(0);
+             $product->setCenaBrutto($cenaNetto + ($cenaNetto * $vat / 100));
+            $product->setNettoMinus20($cenaNetto - ($cenaNetto * 0.2));
+            $product->setNettoMinus30($cenaNetto - ($cenaNetto * 0.3));
+            // Obliczenie wartości w EUR z rabatem
+            $product->setEurMinus20($product->getCenaBrutto() * 0.8);
+            $product->setEurMinus30($product->getCenaBrutto() * 0.7);
             // zapis do bazy danych (jeśli używane jest Doctrine)
             $entityManager->persist($product);
             $entityManager->flush();
-
+            
             //przekiewowanie po zapisaniu
             return $this->redirectToRoute('product_list');
 
@@ -62,10 +70,15 @@ class ProductController extends AbstractController
     #[Route('/', name: 'product_list')]
     public function list(EntityManagerInterface $entityManager): Response
     {
+        
         //pobranie wszystkich produktów z bazy danych
         $products = $entityManager->getRepository(Product::class)->findAll();
         //Renderowanie widoku i przekazanie produktów
-
+         return $this->render('product/list.html.twig', [
+        'products' => $products,
+        // 'shipping_options' => ShippingOption::cases(), // <- Dodaj tę linię
+        // 'edit_mode' => true // lub false w zależności od potrzeb
+    ]);
           // Ustawienie liczby porządkowej
         $lp = 1;
         $totalValue = 0;
@@ -77,6 +90,9 @@ class ProductController extends AbstractController
         return $this ->render('product/list.html.twig', [
             'products'=> $products,
             'totalValue' => $totalValue,
+            // 'nazwaProduktu' => 'Nazwa produktu',
+            // 'shipping_options' => ShippingOption::cases(),
+            
         ]);
     }
 
@@ -111,6 +127,46 @@ class ProductController extends AbstractController
             'totalValue' => $totalValue,
         ]);
     }
+
+    #[Route('/param', name: 'product_param')]
+public function listParam(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $products = $entityManager->getRepository(Product::class)->findAll();
+
+    // Sprawdzenie czy formularz został wysłany
+    if ($request->isMethod('POST')) {
+        $productsData = $request->request->all('products');
+        $action = $request->request->get('action');
+
+        if ($action === 'update') {
+            foreach ($productsData as $id => $data) {
+                $product = $entityManager->getRepository(Product::class)->find($id);
+                if ($product) {
+                    // Obsługa shippingOption
+                    if (isset($data['shippingOption'])) {
+                        $shippingOption = ShippingOption::safeFrom($data['shippingOption']);
+                        $product->setShippingOption($shippingOption);
+                    }
+                }
+            }
+            $entityManager->flush();
+            $this->addFlash('success', 'Produkty zostały zaktualizowane.');
+            return $this->redirectToRoute('product_param');
+        }
+    }
+
+    return $this->render('product/param.html.twig', [
+        'products' => $products,
+        'shipping_options' => ShippingOption::cases(),
+        'edit_mode' => true,
+    ]);
+}
+
+
+     
+       
+    
+    //****************************** */
     
     #[Route('/product/delete-selected', name: 'product_delete_selected', methods: ['POST'])]
     public function deleteSelected(Request $request, EntityManagerInterface $entityManager): Response
@@ -151,13 +207,25 @@ public function editOrDelete(Request $request, EntityManagerInterface $entityMan
     $images = $request->files->get('product_images', []);
     $action = $request->request->get('action');
 
+    error_log('=== Products Data ===');
+    error_log(print_r($productsData, true));
+    error_log('=== To Delete ===');
+    error_log(print_r($toDelete, true));
+    error_log('=== Remove Image ===');
+    error_log(print_r($removeImage, true));
+    error_log('=== Images ===');
+    error_log(print_r($images, true));
+    error_log('=== Action ===');
+    error_log($action);
+
+
+
     if ($action === 'delete') {
         foreach ($toDelete as $id) {
             $product = $entityManager->getRepository(Product::class)->find($id);
             if ($product) {
-                // Usuń zdjęcie z dysku
                 if ($product->getImageFilename()) {
-                    $imagePath = $this->getParameter('product_images_directory') . '/' . $product->getImageFilename();
+                    $imagePath = $this->getParameter('product_images_directory').'/'.$product->getImageFilename();
                     if (file_exists($imagePath)) {
                         unlink($imagePath);
                     }
@@ -171,11 +239,24 @@ public function editOrDelete(Request $request, EntityManagerInterface $entityMan
     }
 
     if ($action === 'update') {
-        foreach ($productsData as $id => $data) {
-            $product = $entityManager->getRepository(Product::class)->find($id);
-
-            if ($product) {
-                // Aktualizacja podstawowych pól
+    foreach ($productsData as $id => $data) {
+        $product = $entityManager->getRepository(Product::class)->find($id);
+        
+        if ($product) {
+           // Debugowanie wartości shippingOption
+            // error_log("ShippingOption value before processing: " . print_r($data['shippingOption'], true));
+            
+            // Obsługa shippingOption
+            if (isset($data['shippingOption'])) {
+                if ($data['shippingOption'] instanceof ShippingOption) {
+                    $product->setShippingOption($data['shippingOption']->value);
+                } elseif (is_string($data['shippingOption']) || is_int($data['shippingOption'])) {
+                    $product->setShippingOption($data['shippingOption']);
+                } else {
+                    $product->setShippingOption(null);
+                }
+            }
+            // Aktualizacja podstawowych pól
                 $product->setKod((int)$data['kod']);
                 $product->setNazwaProduktu($data['nazwaProduktu']);
                 $product->setCenaNetto((float)$data['cenaNetto']);
@@ -217,12 +298,13 @@ public function editOrDelete(Request $request, EntityManagerInterface $entityMan
                     }
                     $product->setImageFilename(null);
                 }
-            }
+            
+            // Reszta aktualizacji...
         }
-
-        $entityManager->flush();
-        $this->addFlash('success', 'Produkty zostały zaktualizowane.');
     }
+    $entityManager->flush();
+    $this->addFlash('success', 'Produkty zostały zaktualizowane.');
+}
 
     return $this->redirectToRoute('product_list');
 }
