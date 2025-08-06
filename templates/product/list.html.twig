@@ -13,6 +13,10 @@
 <style>
  
 </style>
+
+<button class="button"><a href={{ path('product_new')}}>Dodaj</a></button> |
+    <button class="button"><a href={{ path('product_discounts')}}>Upusty</a></button> |
+    <button class="button"><a href={{ path('product_param')}}>Parametry</a></button>
 <div class="table-container">
     <table class="responsive-table">
     <thead>
@@ -98,14 +102,12 @@
         <tr class="bg-blue-500" >
             <td  colspan="3">Wartość produktów brutto:</td>
             <!-- colspan powinien być równy liczbie kolumn minus 1 -->
-            {# <td>{{ totalValue|number_format(2, ',', ' ') }} zł</td> #}
+            <td>{{ totalValue|number_format(2, ',', ' ') }} zł</td>
         </tr>
         </div>
     <button type="submit" name="action" value="update" class="button">Zapisz zmiany</button>
     <button type="submit" name="action" value="delete" class="button">Usuń zaznaczone</button>
-    <button class="button"><a href={{ path('product_new')}}>Dodaj</a></button>
-    <button class="button"><a href={{ path('product_discounts')}}>Upusty</a></button>
-    <button class="button"><a href={{ path('product_param')}}>Parametry</a></button>
+    
     
 </form>
 </div>

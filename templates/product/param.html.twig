@@ -5,10 +5,12 @@
 {% block body %}
 <div class="bg-blue-500 text-white p-4 text-center">Moja testowa aplikacja</div>
 
-
+ 
 
 <div class="px-30 ... bg-blue-00">
- 
+        <button class="button"><a href={{ path('app_test')}}>Testy php</a></button>   |
+        <button class="button"><a href={{ path('product_list')}}>Lista produktów</a></button>
+{# <form method="post" action="{{ path('product_edit_or_delete') }}" enctype="multipart/form-data"> #}
 <form method="post" action="{{ path('product_param') }}" enctype="multipart/form-data">
 <style>
  
@@ -28,6 +30,7 @@
     <tbody>
         {% for product in products %}
         <tr>
+         
                 <td class="border-4 border-double border-blue-400 p-2">{{ loop.index }}</td>
                 <td class="p-2">
                     <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" alt="zdjęcie" class="max-w-[100px]">    
@@ -59,11 +62,8 @@
     </table>   
     </div>                                       
 
-    <button type="submit" name="action" value="update" class="button">Zapisz zmiany</button>
-    <button type="submit" name="action" value="delete" class="button">Usuń zaznaczone</button>
-    <button class="button"><a href={{ path('product_new')}}>Dodaj</a></button>
-    <button class="button"><a href={{ path('app_test')}}>Testy php</a></button>
-    <button class="button"><a href={{ path('product_list')}}>Lista produktów</a></button>
+    <button type="submit" name="action" value="update_param" class="button">Zapisz zmiany</button>
+   
 </form>
 </div>
 {% endblock %}

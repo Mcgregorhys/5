@@ -73,13 +73,7 @@ class ProductController extends AbstractController
         
         //pobranie wszystkich produktów z bazy danych
         $products = $entityManager->getRepository(Product::class)->findAll();
-        //Renderowanie widoku i przekazanie produktów
-         return $this->render('product/list.html.twig', [
-        'products' => $products,
-        // 'shipping_options' => ShippingOption::cases(), // <- Dodaj tę linię
-        // 'edit_mode' => true // lub false w zależności od potrzeb
-    ]);
-          // Ustawienie liczby porządkowej
+       
         $lp = 1;
         $totalValue = 0;
         foreach ($products as $product) {
@@ -89,10 +83,7 @@ class ProductController extends AbstractController
 
         return $this ->render('product/list.html.twig', [
             'products'=> $products,
-            'totalValue' => $totalValue,
-            // 'nazwaProduktu' => 'Nazwa produktu',
-            // 'shipping_options' => ShippingOption::cases(),
-            
+            'totalValue' => $totalValue,    
         ]);
     }
 
@@ -128,39 +119,9 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/param', name: 'product_param')]
-public function listParam(Request $request, EntityManagerInterface $entityManager): Response
-{
-    $products = $entityManager->getRepository(Product::class)->findAll();
+    
 
-    // Sprawdzenie czy formularz został wysłany
-    if ($request->isMethod('POST')) {
-        $productsData = $request->request->all('products');
-        $action = $request->request->get('action');
-
-        if ($action === 'update') {
-            foreach ($productsData as $id => $data) {
-                $product = $entityManager->getRepository(Product::class)->find($id);
-                if ($product) {
-                    // Obsługa shippingOption
-                    if (isset($data['shippingOption'])) {
-                        $shippingOption = ShippingOption::safeFrom($data['shippingOption']);
-                        $product->setShippingOption($shippingOption);
-                    }
-                }
-            }
-            $entityManager->flush();
-            $this->addFlash('success', 'Produkty zostały zaktualizowane.');
-            return $this->redirectToRoute('product_param');
-        }
-    }
-
-    return $this->render('product/param.html.twig', [
-        'products' => $products,
-        'shipping_options' => ShippingOption::cases(),
-        'edit_mode' => true,
-    ]);
-}
+    
 
 
      
@@ -207,16 +168,16 @@ public function editOrDelete(Request $request, EntityManagerInterface $entityMan
     $images = $request->files->get('product_images', []);
     $action = $request->request->get('action');
 
-    error_log('=== Products Data ===');
-    error_log(print_r($productsData, true));
-    error_log('=== To Delete ===');
-    error_log(print_r($toDelete, true));
-    error_log('=== Remove Image ===');
-    error_log(print_r($removeImage, true));
-    error_log('=== Images ===');
-    error_log(print_r($images, true));
-    error_log('=== Action ===');
-    error_log($action);
+    // error_log('=== Products Data ===');
+    // error_log(print_r($productsData, true));
+    // error_log('=== To Delete ===');
+    // error_log(print_r($toDelete, true));
+    // error_log('=== Remove Image ===');
+    // error_log(print_r($removeImage, true));
+    // error_log('=== Images ===');
+    // error_log(print_r($images, true));
+    // error_log('=== Action ===');
+    // error_log($action);
 
 
 
