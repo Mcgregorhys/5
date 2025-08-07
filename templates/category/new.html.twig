@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dodaj kategorię{% endblock %}
+
+{% block body %}
+    <h1>Dodaj kategorię</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-primary">Zapisz</button>
+
+    {{ form_end(form) }}
+     <button class="button"><a href={{ path('product_list')}}>Lista produktów</a></button>
+{% endblock %}

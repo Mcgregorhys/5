@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProductRepository;
 use App\Enum\ShippingOption;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Category;
 
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
@@ -54,6 +55,10 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $eur_minus30 = null;
 
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Category $category = null;
+
    
 
    /************typ wyliczeniowy */
@@ -61,6 +66,10 @@ class Product
 
 #[ORM\Column(type: 'string', enumType: ShippingOption::class, nullable: true)]
 private  $shippingOption = null;
+
+#[ORM\ManyToOne(inversedBy: 'products')]
+#[ORM\JoinColumn(nullable: false)]
+//private ?Category $category = null;
 
 // Gettery i settery
 public function getShippingOption(): ?ShippingOption
@@ -269,6 +278,18 @@ public function setShippingOption($shippingOption): void
     public function setInternationalShipping(?ShippingOption $internationalShipping): static
     {
         $this->internationalShipping = $internationalShipping;
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
         return $this;
     }
 }

@@ -15,6 +15,9 @@
 </style>
 
 <button class="button"><a href={{ path('product_new')}}>Dodaj</a></button> |
+
+<a href="{{ path('app_category_new') }}" class="btn btn-success">Dodaj nową kategorię</a> |
+<a href="{{ path('add-category') }}" class="btn btn-success">Przypisz nową kategorię</a> |
     <button class="button"><a href={{ path('product_discounts')}}>Upusty</a></button> |
     <button class="button"><a href={{ path('product_param')}}>Parametry</a></button>
 <div class="table-container">
@@ -83,6 +86,7 @@
             <td class="border-4 border-double border-blue-400 p-2">
                     <input type="checkbox" name="to_delete[]" value="{{ product.id }}" class="auto-input[readonly]">
             </td>   
+           
        
             
         </tr>

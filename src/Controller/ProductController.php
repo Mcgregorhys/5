@@ -67,25 +67,29 @@ class ProductController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    #[Route('/', name: 'product_list')]
-    public function list(EntityManagerInterface $entityManager): Response
-    {
-        
-        //pobranie wszystkich produktów z bazy danych
-        $products = $entityManager->getRepository(Product::class)->findAll();
-       
-        $lp = 1;
-        $totalValue = 0;
-        foreach ($products as $product) {
-            $product->setLp($lp++);
-            $totalValue += $product->getValue();
-        }
+   #[Route('/', name: 'product_list')]
+public function list(EntityManagerInterface $entityManager): Response
+{
+    // pobranie wszystkich produktów z bazy danych
+    $products = $entityManager->getRepository(Product::class)->findAll();
+    
+    // // pobranie kategorii z bazy danych
+    // $categories = $categoryRepository->findAll();
 
-        return $this ->render('product/list.html.twig', [
-            'products'=> $products,
-            'totalValue' => $totalValue,    
-        ]);
+    // numeracja i sumowanie wartości
+    $lp = 1;
+    $totalValue = 0;
+    foreach ($products as $product) {
+        $product->setLp($lp++);
+        $totalValue += $product->getValue();
     }
+
+    return $this->render('product/list.html.twig', [
+        'products' => $products,
+        // 'categories' => $categories,
+        'totalValue' => $totalValue,
+    ]);
+}
 
     #[Route('/discounts', name: 'product_discounts')]
     public function listDiscounts(EntityManagerInterface $entityManager): Response
@@ -119,14 +123,6 @@ class ProductController extends AbstractController
         ]);
     }
 
-    
-
-    
-
-
-     
-       
-    
     //****************************** */
     
     #[Route('/product/delete-selected', name: 'product_delete_selected', methods: ['POST'])]
@@ -153,34 +149,18 @@ class ProductController extends AbstractController
     
         return $this->redirectToRoute('product_list');
     }
-    
-    
-    
-
-
-
 #[Route('/product/edit-or-delete', name: 'product_edit_or_delete', methods: ['POST'])]
 public function editOrDelete(Request $request, EntityManagerInterface $entityManager): Response
 {
+    //$categoryRepository = $entityManager->getRepository(Category::class);
+    $categoryRepository = $entityManager->getRepository(\App\Entity\Category::class);
     $productsData = $request->request->all('products');
     $toDelete = $request->request->all('to_delete');
     $removeImage = $request->request->all('remove_image');
     $images = $request->files->get('product_images', []);
     $action = $request->request->get('action');
 
-    // error_log('=== Products Data ===');
-    // error_log(print_r($productsData, true));
-    // error_log('=== To Delete ===');
-    // error_log(print_r($toDelete, true));
-    // error_log('=== Remove Image ===');
-    // error_log(print_r($removeImage, true));
-    // error_log('=== Images ===');
-    // error_log(print_r($images, true));
-    // error_log('=== Action ===');
-    // error_log($action);
-
-
-
+    
     if ($action === 'delete') {
         foreach ($toDelete as $id) {
             $product = $entityManager->getRepository(Product::class)->find($id);
@@ -198,11 +178,13 @@ public function editOrDelete(Request $request, EntityManagerInterface $entityMan
         $this->addFlash('success', 'Wybrane produkty zostały usunięte.');
         return $this->redirectToRoute('product_list');
     }
-
+ 
     if ($action === 'update') {
+        
     foreach ($productsData as $id => $data) {
         $product = $entityManager->getRepository(Product::class)->find($id);
-        
+       
+
         if ($product) {
            // Debugowanie wartości shippingOption
             // error_log("ShippingOption value before processing: " . print_r($data['shippingOption'], true));
@@ -217,12 +199,32 @@ public function editOrDelete(Request $request, EntityManagerInterface $entityMan
                     $product->setShippingOption(null);
                 }
             }
+
+                        if (isset($data['category'])) {
+                $categoryId = (int) $data['category'];
+
+                if ($categoryId > 0) {
+                    $category = $categoryRepository->find($categoryId);
+
+                    if ($category) {
+                        $product->setCategory($category);
+                    } else {
+                        $this->addFlash('warning', "Nie znaleziono kategorii ID: {$categoryId} dla produktu ID: {$id}");
+                    }
+                } else {
+                    // jeśli np. wybrano "brak kategorii"
+                    $product->setCategory(null);
+                }
+            }
+
+
             // Aktualizacja podstawowych pól
                 $product->setKod((int)$data['kod']);
                 $product->setNazwaProduktu($data['nazwaProduktu']);
                 $product->setCenaNetto((float)$data['cenaNetto']);
                 $product->setVat((int)$data['vat']);
                 $product->setNettoMinus30($product->getCenaNetto() - ($product->getCenaNetto() * 0.3));
+                $category = $product->getCategory();
                 
                 // Aktualizacja amount z walidacją
                 $amount = (int)$data['amount'];

@@ -55,12 +55,11 @@ class ProductTypeForm extends AbstractType
                 'maxSize' => '2M',
                 'mimeTypes' => ['image/jpeg', 'image/png'],
                 'mimeTypesMessage' => 'Dodaj poprawny plik JPG lub PNG.',
-            ]),
+             ]),
         ],
     ])
     ;
 }
-
 
 
  function configureOptions(OptionsResolver $resolver): void
@@ -69,6 +68,4 @@ $resolver->setDefaults([
     'data_class' => Product::class,
 ]);
 }
-
-
-}
+    }
