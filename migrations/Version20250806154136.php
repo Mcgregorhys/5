@@ -23,15 +23,15 @@ final class Version20250806154136 extends AbstractMigration
         // $this->addSql(<<<'SQL'
         //     CREATE TABLE category (id INT AUTO_INCREMENT NOT NULL, name_of_cat VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         // SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE product ADD category_id INT NOT NULL
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE product ADD CONSTRAINT FK_D34A04AD12469DE2 FOREIGN KEY (category_id) REFERENCES category (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE INDEX IDX_D34A04AD12469DE2 ON product (category_id)
-        SQL);
+        // $this->addSql(<<<'SQL'
+        //     ALTER TABLE product ADD category_id INT NOT NULL
+        // SQL);
+        // $this->addSql(<<<'SQL'
+        //     ALTER TABLE product ADD CONSTRAINT FK_D34A04AD12469DE2 FOREIGN KEY (category_id) REFERENCES category (id)
+        // SQL);
+        // $this->addSql(<<<'SQL'
+        //     CREATE INDEX IDX_D34A04AD12469DE2 ON product (category_id)
+        // SQL);
     }
 
     public function down(Schema $schema): void
@@ -46,8 +46,8 @@ final class Version20250806154136 extends AbstractMigration
         $this->addSql(<<<'SQL'
             DROP INDEX IDX_D34A04AD12469DE2 ON product
         SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE product DROP category_id
-        SQL);
+        // $this->addSql(<<<'SQL'
+        //     ALTER TABLE product DROP category_id
+        // SQL);
     }
 }

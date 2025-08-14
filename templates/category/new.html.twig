@@ -5,10 +5,24 @@
 {% block body %}
     <h1>Dodaj kategorię</h1>
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
+    {# {{ form_start(form) }}
+        {{ form_widget(form,  {'class': 'form-control'} ) }}
         <button class="btn btn-primary">Zapisz</button>
 
-    {{ form_end(form) }}
+    {{ form_end(form) }} #}
+{{ form_start(form) }}
+
+<div class="form-group mb-3">
+    {{ form_label(form.NameOfCat, null, {'label_attr': {'class': 'form-label me-2'}}) }}
+    {{ form_widget(form.NameOfCat, {'attr': {'class': 'form-control d-inline-block w-auto'}}) }}
+</div>
+
+<button class="btn btn-primary">Zapisz</button>
+
+{{ form_end(form) }}
+
+
+
+
      <button class="button"><a href={{ path('product_list')}}>Lista produktów</a></button>
 {% endblock %}

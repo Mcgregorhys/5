@@ -7,10 +7,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 //dodaję
 use App\Entity\Product;
-use App\Form\ProductTypeForm;
+//use App\Form\ProductTypeForm;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Enum\ShippingOption;
+use App\Enum\ColorsOption;
 
 class ParamController extends AbstractController
 {
@@ -19,6 +20,7 @@ class ParamController extends AbstractController
     {
         $products = $entityManager->getRepository(Product::class)->findAll();
 
+        
         // Sprawdzenie czy formularz został wysłany
         if ($request->isMethod('POST')) {
             $productsData = $request->request->all('products');
@@ -44,6 +46,8 @@ class ParamController extends AbstractController
         'products' => $products,
         'shipping_options' => ShippingOption::cases(),
         'edit_mode' => true,
+        'colors_option' => ColorsOption::cases(),
+
     ]);
 }
 
@@ -57,28 +61,29 @@ public function editOrDeleteParam(Request $request, EntityManagerInterface $enti
     $images = $request->files->get('product_images', []);
     $action = $request->request->get('action');
 
+     
     
     if ($action === 'update_param') {
     foreach ($productsData as $id => $data) {
         $product = $entityManager->getRepository(Product::class)->find($id);
-        
+       
         if ($product) {
-            
-            // Obsługa shippingOption
-            if (isset($data['shippingOption'])) {
-                if ($data['shippingOption'] instanceof ShippingOption) {
-                    $product->setShippingOption($data['shippingOption']->value);
-                } elseif (is_string($data['shippingOption']) || is_int($data['shippingOption'])) {
-                    $product->setShippingOption($data['shippingOption']);
+             if (isset($data['shippingOption'])) {
+                $shippingOption = ShippingOption::safeFrom($data['shippingOption']);
+                $product->setShippingOption($shippingOption?->value);
+            }
+          // Obsługa colorsOption
+             if (isset($data['colorsOption'])) {
+                $colorsOptionValue = $data['colorsOption'];
+                $colorsOption = \App\Enum\ColorsOption::tryFrom($colorsOptionValue);
+
+                if ($colorsOption !== null || empty($colorsOptionValue)) {
+                    $product->setColorsOption($colorsOption);
                 } else {
-                    $product->setShippingOption(null);
+                    $this->addFlash('warning', "Nieprawidłowa wartość koloru dla produktu ID: {$id}");
+                    continue; // Pamiętaj o tej poprawce
                 }
             }
-            // Aktualizacja podstawowych pól
-               
-                $product->setNazwaProduktu($data['nazwaProduktu']);
-               
-
                 // Obsługa zdjęć
                 if (!$product->getImageFilename() && isset($images[$id])) {
                     $imageFile = $images[$id];
@@ -99,8 +104,7 @@ public function editOrDeleteParam(Request $request, EntityManagerInterface $enti
                     }
                     $product->setImageFilename(null);
                 }
-            
-            // Reszta aktualizacji...
+        
         }
     }
     $entityManager->flush();

@@ -9,11 +9,11 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Transport>
  */
-class TransportRepository extends ServiceEntityRepository
+class ColorsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Transport::class);
+        parent::__construct($registry, Colors::class);
     }
 
 }

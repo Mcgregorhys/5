@@ -8,10 +8,9 @@
  
 
 <div class="px-30 ... bg-blue-00">
-        <button class="button"><a href={{ path('app_test')}}>Testy php</a></button>   |
-        <button class="button"><a href={{ path('product_list')}}>Lista produktów</a></button>
-{# <form method="post" action="{{ path('product_edit_or_delete') }}" enctype="multipart/form-data"> #}
-<form method="post" action="{{ path('product_param') }}" enctype="multipart/form-data">
+        <button class="btn btn-outline-primary"><a href={{ path('app_test')}}>Testy php</a></button>   
+        <button class="btn btn-outline-primary"><a href={{ path('product_list')}}>Lista produktów</a></button>
+<form method="post" action="{{ path('product_edit_param') }}" enctype="multipart/form-data">
 <style>
  
 </style>
@@ -29,6 +28,7 @@
     </thead>
     <tbody>
         {% for product in products %}
+      
         <tr>
          
                 <td class="border-4 border-double border-blue-400 p-2">{{ loop.index }}</td>
@@ -51,6 +51,19 @@
                     </option>
                     {% endfor %}
                     </select>
+                </td>
+
+                 <td class="border-4 border-double border-blue-400 p-2 w-auto">
+                    <select name="products[{{ product.id }}][colorsOption]">
+                        <option value="">-- Wybierz --</option>
+                            {% for option in colors_option %}
+                            <option value="{{ option.value }}"
+                            {% if product.colorsOption and product.colorsOption.value == option.value %}selected{% endif %}>
+                            {{ option.label() }}
+                        </option>
+                        {% endfor %}
+                    </select>
+
                 </td>
            
         </tr>  

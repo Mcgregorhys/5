@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use App\Enum\ShippingOption;
+use App\Enum\ColorsOption;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Category;
 
@@ -61,15 +62,13 @@ class Product
 
    
 
-   /************typ wyliczeniowy */
+   /************typ wyliczeniowy shippingOption */
    
-
 #[ORM\Column(type: 'string', enumType: ShippingOption::class, nullable: true)]
 private  $shippingOption = null;
 
 #[ORM\ManyToOne(inversedBy: 'products')]
 #[ORM\JoinColumn(nullable: false)]
-//private ?Category $category = null;
 
 // Gettery i settery
 public function getShippingOption(): ?ShippingOption
@@ -95,10 +94,23 @@ public function setShippingOption($shippingOption): void
             }
         }
     }
-
     // Dla wszystkich innych przypadków ustaw null
     $this->shippingOption = null;
 }
+ /************typ wyliczeniowy colorsOption */
+   
+#[ORM\Column(type: 'string', enumType: ColorsOption::class, nullable: true)]
+
+private ?ColorsOption $colorsOption = null;
+public function getColorsOption(): ?ColorsOption
+    {
+        return $this->colorsOption;
+    }
+
+    public function setColorsOption(?ColorsOption $colorsOption): void
+    {
+        $this->colorsOption = $colorsOption;
+    }
 /************end typ wyliczeniowy */
 
     public function getId(): ?int
@@ -259,27 +271,7 @@ public function setShippingOption($shippingOption): void
         return $this;
     }
 
-    public function getDomesticShipping(): ?ShippingOption
-    {
-        return $this->domesticShipping;
-    }
-
-    public function setDomesticShipping(?ShippingOption $domesticShipping): static
-    {
-        $this->domesticShipping = $domesticShipping;
-        return $this;
-    }
-
-    public function getInternationalShipping(): ?ShippingOption
-    {
-        return $this->internationalShipping;
-    }
-
-    public function setInternationalShipping(?ShippingOption $internationalShipping): static
-    {
-        $this->internationalShipping = $internationalShipping;
-        return $this;
-    }
+   
 
     public function getCategory(): ?Category
     {

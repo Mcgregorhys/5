@@ -14,12 +14,11 @@
  
 </style>
 
-<button class="button"><a href={{ path('product_new')}}>Dodaj</a></button> |
-
-<a href="{{ path('app_category_new') }}" class="btn btn-success">Dodaj nową kategorię</a> |
-<a href="{{ path('add-category') }}" class="btn btn-success">Przypisz nową kategorię</a> |
-    <button class="button"><a href={{ path('product_discounts')}}>Upusty</a></button> |
-    <button class="button"><a href={{ path('product_param')}}>Parametry</a></button>
+<button class="btn btn-outline-primary"><a href={{ path('product_new')}}>Dodaj</a></button> 
+<button class="btn btn-outline-primary"><a href="{{ path('app_category_new') }}" >Dodaj nową kategorię</a> </button>
+<button class="btn btn-outline-primary"><a href="{{ path('add-category') }}" >Przypisz nową kategorię</a> </button>
+<button class="btn btn-outline-primary"><a href={{ path('product_discounts')}}>Upusty</a></button> 
+<button class="btn btn-outline-primary"><a href={{ path('product_param')}}>Parametry</a></button>
 <div class="table-container">
     <table class="responsive-table">
     <thead>
@@ -102,7 +101,7 @@
            
     </table>   
     </div>                                       
-<div class="bg-lime-800 text-black  text-center"> 
+<div class="btn btn-primary btn-lg btn-block  text-center"> 
         <tr class="bg-blue-500" >
             <td  colspan="3">Wartość produktów brutto:</td>
             <!-- colspan powinien być równy liczbie kolumn minus 1 -->

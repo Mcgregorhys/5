@@ -200,7 +200,8 @@ public function editOrDelete(Request $request, EntityManagerInterface $entityMan
                 }
             }
 
-                        if (isset($data['category'])) {
+            
+            if (isset($data['category'])) {
                 $categoryId = (int) $data['category'];
 
                 if ($categoryId > 0) {
