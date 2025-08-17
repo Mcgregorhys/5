@@ -8,8 +8,8 @@
  
 
 <div class="px-30 ... bg-blue-00">
-        <button class="button"><a href={{ path('app_test')}}>Testy php</a></button>   |
-        <button class="button"><a href={{ path('product_list')}}>Lista produktów</a></button>
+        <button class="btn btn-outline-primary"><a href={{ path('app_test')}}>Testy php</a></button>   
+        <button class="btn btn-outline-primary"><a href={{ path('product_list')}}>Lista produktów</a></button>
 {# <form method="post" action="{{ path('product_edit_or_delete') }}" enctype="multipart/form-data"> #}
 <form method="post" action="{{ path('add-category') }}" enctype="multipart/form-data">
 <style>
@@ -62,7 +62,7 @@
     </table>   
     </div>                                       
 
-    <button type="submit" name="action" value="add-category" class="button">Zapisz zmiany</button>
+    <button type="submit" name="action" value="add-category" class="btn btn-secondary btn-sm">Zapisz zmiany</button>
    
 </form>
 </div>

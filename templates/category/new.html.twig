@@ -17,12 +17,12 @@
     {{ form_widget(form.NameOfCat, {'attr': {'class': 'form-control d-inline-block w-auto'}}) }}
 </div>
 
-<button class="btn btn-primary">Zapisz</button>
+<button class="btn btn-secondary btn-sm">Zapisz</button>
 
 {{ form_end(form) }}
 
 
 
 
-     <button class="button"><a href={{ path('product_list')}}>Lista produktów</a></button>
+     <button class="btn btn-secondary btn-sm"><a href={{ path('product_list')}}>Lista produktów</a></button>
 {% endblock %}

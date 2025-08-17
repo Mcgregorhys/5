@@ -7,7 +7,7 @@ use App\Enum\ShippingOption;
 use App\Enum\ColorsOption;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Category;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -20,8 +20,22 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $lp = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $kod = null;
+//*********************kod */
+    #[ORM\Column(type: 'string', length: 20)]
+    #[Assert\Length(
+        min: 6,
+        max: 20,
+        minMessage: 'Kod musi mieć co najmniej {{ limit }} znaków.',
+        maxMessage: 'Kod nie może być dłuższy niż {{ limit }} znaków.'
+    )]
+    #[Assert\NotBlank(message: 'Kod nie może być pusty.')]
+    #[Assert\Regex(
+        pattern: '/^\d+$/',
+        message: 'Kod może zawierać tylko cyfry.'
+    )]
+
+    private ?string $kod = null ;
+//*************end kod *********************** */
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $imageFilename = null;

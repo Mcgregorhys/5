@@ -23,17 +23,49 @@
 <h1 class="mt-20 mb-10">Nowy produkt</h1>
 
 <table  class="border-collapse border border-slate-400">
- {{ form_start(form) }}
+{{ form_start(form) }}
 
-            <tr>
-                <td class="border-collapse border border-slate-400"> {{ form_row(form.kod) }}</td>
-                <td class="border-collapse border border-slate-400"> {{ form_row(form.imageFile) }}</td>
-                <td class="border-collapse border border-slate-400"> {{ form_row(form.nazwaProduktu) }}</td>
-                <td class="border-collapse border border-slate-400"> {{ form_row(form.amount) }}</td>
-                <td class="border-collapse border border-slate-400"> {{ form_row(form.cenaNetto) }}</td>
-                <td class="border-collapse border border-slate-400"> {{ form_row(form.vat) }}</td> 
-            </tr>
-            <button type="submit" class="btn btn-primary bg-slate-300">Zapisz</button></td></tr>
+{{ form_errors(form) }}
+
+<tr>
+    {# <td class="border-collapse border border-slate-400">
+        {{ form_label(form.kod) }}
+        {{ form_widget(form.kod, {'attr': {'class': 'form-control'}}) }}
+        
+        <div class="text-red-600 text-sm">
+            {{ form_errors(form.kod) }}
+        </div>
+    </td> #}
+   <td class="border-collapse border border-slate-400">
+    {{ form_label(form.kod) }}
+    {{ form_widget(form.kod, {
+        'attr': {
+            'class': 'form-control',
+            inputmode: 'numeric',
+        pattern: '[0-9]*',
+        minlength: 6,
+        maxlength: 20,
+        }
+    }) }}
+    
+    {# Wyświetl błędy Symfony #}
+    {% if form.kod.vars.errors|length > 0 %}
+        <div style="color: red; font-weight: bold; padding: 5px;">
+            {% for error in form.kod.vars.errors %}
+                {{ error.message }}<br>
+            {% endfor %}
+        </div>
+    {% endif %}
+</td>
+    <td class="border-collapse border border-slate-400">{{ form_row(form.imageFile) }}</td>
+    <td class="border-collapse border border-slate-400">{{ form_row(form.nazwaProduktu) }}</td>
+    <td class="border-collapse border border-slate-400">{{ form_row(form.amount) }}</td>
+    <td class="border-collapse border border-slate-400">{{ form_row(form.cenaNetto) }}</td>
+    <td class="border-collapse border border-slate-400">{{ form_row(form.vat) }}</td>
+</tr>
+
+<button type="submit" class="btn btn-primary bg-slate-300">Zapisz</button>
+
 {{ form_end(form) }}
     </table>
     <div class="text-right"

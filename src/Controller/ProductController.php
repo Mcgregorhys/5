@@ -15,7 +15,7 @@ use App\Enum\ShippingOption;
 class ProductController extends AbstractController
 {
     #[Route('/product/new', name: 'product_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, EntityManagerInterface $em): Response
     {
         //tworzę zminną produkt jako nowy obiekt klasy produkt
         $product = new Product();
@@ -26,7 +26,13 @@ class ProductController extends AbstractController
         $form = $this->createForm(ProductTypeForm::class, $product);
         $form->handleRequest($request);
 
+        
+
+
+
+
         if($form->isSubmitted() && $form->isValid()){
+            
 
              $imageFile = $form->get('imageFile')->getData();
 
@@ -58,15 +64,38 @@ class ProductController extends AbstractController
             $entityManager->persist($product);
             $entityManager->flush();
             
+
+          
             //przekiewowanie po zapisaniu
             return $this->redirectToRoute('product_list');
 
         }
+          if ($form->isSubmitted() && !$form->isValid()) {
+            dump($form->getErrors(true, false)); // <-- tu zobaczysz błędy
+            }
 
-        return $this->render('product/new.html.twig', [
-            'form' => $form->createView(),
-        ]);
+ if ($form->isSubmitted()) {
+        if (!$form->isValid()) {
+            // Debug: Zobacz wszystkie błędy
+            dump($form->getErrors(true));
+            die();
+        }
+
+        $em->persist($product);
+        $em->flush();
+        return $this->redirectToRoute('product_list');
     }
+
+    return $this->render('product/new.html.twig', [
+        'form' => $form->createView(),
+    ]);
+}
+
+
+    //     return $this->render('product/new.html.twig', [
+    //         'form' => $form->createView(),
+    //     ]);
+    // }
    #[Route('/', name: 'product_list')]
 public function list(EntityManagerInterface $entityManager): Response
 {
@@ -218,9 +247,8 @@ public function editOrDelete(Request $request, EntityManagerInterface $entityMan
                 }
             }
 
-
             // Aktualizacja podstawowych pól
-                $product->setKod((int)$data['kod']);
+                $product->setKod($data['kod']);
                 $product->setNazwaProduktu($data['nazwaProduktu']);
                 $product->setCenaNetto((float)$data['cenaNetto']);
                 $product->setVat((int)$data['vat']);
