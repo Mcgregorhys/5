@@ -5,29 +5,22 @@
 {% block body %}
 <div class="row">
     <div class="col-sm-8" style="padding-left: 200px;">TESTOWA APLIKACJA</div>
-    <div class="col-sm-4">
-    
+        <div class="col-sm-4">
 
-
-
-<div class="dropdown">
-  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Logowanie/Rejestracja
-  </a>
-
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{{path('app_login')}}">Logowanie</a></li>
-    <li><a class="dropdown-item" href="{{path('app_logout')}}">Wylogowanie</a></li>
-    <li><a class="dropdown-item" href="{{path('app_register')}}">Rejestracja</a></li>
-  </ul>
-</div>
-
-
-
-
-    
-    </div>
-    
+            <div class="dropdown">
+            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Logowanie/Rejestracja
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{path('app_login')}}">Logowanie</a></li>
+                <li><a class="dropdown-item" href="{{path('app_logout')}}">Wylogowanie</a></li>
+                <li><a class="dropdown-item" href="{{path('app_register')}}">Rejestracja</a></li>
+               
+                <li><a class="dropdown-item" href="{{path('admin')}}">Dashboard</a></li>
+            </ul>
+            </div>
+        
+        </div>
   </div>
 
 
@@ -43,6 +36,7 @@
 <button class="btn btn-outline-primary"><a href="{{ path('app_category_new') }}" >Dodaj nową kategorię</a> </button>
 <button class="btn btn-outline-primary"><a href="{{ path('add-category') }}" >Przypisz nową kategorię</a> </button>
 <button class="btn btn-outline-primary"><a href={{ path('product_discounts')}}>Upusty</a></button> 
+
 <button class="btn btn-outline-primary"><a href={{ path('product_param')}}>Parametry</a></button>
 <div class="table-container">
     <table class="responsive-table">

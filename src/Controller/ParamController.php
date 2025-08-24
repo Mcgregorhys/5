@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+//use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 //dodaję
 use App\Entity\Product;
 //use App\Form\ProductTypeForm;
@@ -13,9 +15,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Enum\ShippingOption;
 use App\Enum\ColorsOption;
 
+
 class ParamController extends AbstractController
 {
     #[Route('/param', name: 'product_param')]
+    #[IsGranted('ROLE_ADMIN')]
     public function listParam(Request $request, EntityManagerInterface $entityManager): Response
     {
         $products = $entityManager->getRepository(Product::class)->findAll();

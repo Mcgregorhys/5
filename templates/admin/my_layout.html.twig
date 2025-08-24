@@ -1,0 +1,57 @@
+{% extends '@EasyAdmin/layout.html.twig' %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    <style>
+    .test-header {
+            background-color: red;
+            color: white;
+            padding: 10px;
+            margin: -2rem -2rem 2rem -2rem;
+            text-align: center;
+        }
+        .custom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            margin: -2rem -2rem 2rem -2rem;
+        }
+        .custom-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: #495057;
+        }
+        .header-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .header-buttons .btn {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+    </style>
+{% endblock %}
+
+{% block header %}
+    <div class="custom-header">
+        <h1>{{ ea.dashboardTitle() }}</h1>
+        <div class="header-buttons">
+            <a href="{{ path('admin') }}" class="btn btn-secondary">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="http://localhost/" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Strona główna
+            </a>
+            <a href="{{ path('app_logout') }}" class="btn btn-danger">
+                <i class="fas fa-sign-out-alt"></i> Wyloguj
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {{ parent() }}
+{% endblock %}

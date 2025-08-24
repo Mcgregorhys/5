@@ -15,6 +15,8 @@ use App\Entity\Product;
 final class AddCategoryController extends AbstractController
 {
    #[Route('/add_category', name: 'add-category')]
+    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_USER')]
 public function AdCategory(Request $request, EntityManagerInterface $entityManager, CategoryRepository $categoryRepository): Response
 {
     $products = $entityManager->getRepository(Product::class)->findAll();
