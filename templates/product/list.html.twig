@@ -36,8 +36,8 @@
 <button class="btn btn-outline-primary"><a href="{{ path('app_category_new') }}" >Dodaj nową kategorię</a> </button>
 <button class="btn btn-outline-primary"><a href="{{ path('add-category') }}" >Przypisz nową kategorię</a> </button>
 <button class="btn btn-outline-primary"><a href={{ path('product_discounts')}}>Upusty</a></button> 
-
 <button class="btn btn-outline-primary"><a href={{ path('product_param')}}>Parametry</a></button>
+<button class="btn btn-outline-primary"><a href={{ path('app_test')}}>PHP</a></button>
 <div class="table-container">
     <table class="responsive-table">
     <thead>
@@ -129,8 +129,19 @@
         </div>
     <button type="submit" name="action" value="update" class="btn btn-secondary btn-sm">Zapisz zmiany</button>
     <button type="submit" name="action" value="delete" class="btn btn-secondary btn-sm">Usuń zaznaczone</button>
-    
+
+    <div class="btn-group">
+  <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+    Eksportuj
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{{ path('products_export', {format: 'pdf'}) }}" target="_blank">PDF</a></li>
+    <li><a class="dropdown-item" href="{{ path('products_export', {format: 'xls'}) }}">Excel (XLSX)</a></li>
+    <li><a class="dropdown-item" href="{{ path('products_export', {format: 'csv'}) }}">CSV</a></li>
+  </ul>
+</div>
+   
     
 </form>
-</div>
+</div>,
 {% endblock %}

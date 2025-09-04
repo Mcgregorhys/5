@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @font-face {
+        font-family: 'DejaVu Sans';
+        src: url('{{ asset("fonts/DejaVuSans.ttf") }}') format("truetype");
+    }
+    body {
+        font-family: 'DejaVu Sans', sans-serif;
+    }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #000; padding: 6px; text-align: left; font-size:10px; }
+    </style>
+</head>
+<body>
+    <h1>Lista produktów</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Kod</th>
+                <th>Obrazek</th>
+                <th>Nazwa</th>
+                <th>Cena</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td style ="width:50px; text-align:center;">{{ product.kod }}</td>
+                <td style ="width:50px; text-align:center;">
+                   {% if product.imageFilename %}
+    {% if product.imageFilename ends with '.webp' %}
+        (brak zdjęcia / format nieobsługiwany)
+    {% else %}
+        <img src="uploads/products/{{ product.imageFilename }}" width="40">
+    {% endif %}
+{% else %}
+    (brak zdjęcia)
+{% endif %}
+                </td>
+                <td>{{ product.nazwaProduktu }}</td>
+                <td>{{ product.cenaNetto|number_format(2, ',', ' ') }} zł</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Brak produktów</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

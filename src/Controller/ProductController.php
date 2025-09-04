@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Controller;
+use Dompdf\Dompdf;
 
+use App\Repository\ProductRepository;
+use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,7 +18,7 @@ use App\Enum\ShippingOption;
 class ProductController extends AbstractController
 {
     #[Route('/product/new', name: 'product_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager, EntityManagerInterface $em): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, EntityManagerInterface $em, FileUploader $fileUploader): Response
     {
         //tworzę zminną produkt jako nowy obiekt klasy produkt
         $product = new Product();
@@ -26,13 +29,18 @@ class ProductController extends AbstractController
         $form = $this->createForm(ProductTypeForm::class, $product);
         $form->handleRequest($request);
 
-        
-
-
-
-
         if($form->isSubmitted() && $form->isValid()){
             
+        //Obsługa przesyłania plików
+
+            $file = $form->get('imageFile')->getData();
+        if ($file) {
+            $filename = $fileUploader->upload($file);
+            $product->setImageFilename($filename);
+        }
+
+
+
 
              $imageFile = $form->get('imageFile')->getData();
 
@@ -300,5 +308,7 @@ public function editOrDelete(Request $request, EntityManagerInterface $entityMan
 
     return $this->redirectToRoute('product_list');
 }
+
+
 
 }

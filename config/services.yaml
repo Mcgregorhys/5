@@ -6,6 +6,9 @@
 parameters:
     product_images_directory: '%kernel.project_dir%/public/uploads/products'
 services:
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%kernel.project_dir%/public/uploads/products'
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

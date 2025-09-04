@@ -11,9 +11,20 @@ NAUKA PHP
 <button class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset"></BR>
 <a href={{ path('product_list')}}>LISTA PRODUKTÓW</a>
     </div>
-    
+<div class="px-30 ... bg-blue-00">
+     <h3>Dane z kontrolera:</h3>
+    <ul>
+    {% for key, value in data_array %}
+        <li><strong>{{ key }}</strong>: {{ value }}</li>
+    {% endfor %}
+    </ul>
+    <h3>Dane z tablicy 2</h3>
+    <ul>
+    {% for key, value in data_array2  %}
+         {{value}}
+    {% endfor %}
 
-
+    </ul>
     
 </div>
 
