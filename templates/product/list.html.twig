@@ -38,6 +38,7 @@
 <button class="btn btn-outline-primary"><a href={{ path('product_discounts')}}>Upusty</a></button> 
 <button class="btn btn-outline-primary"><a href={{ path('product_param')}}>Parametry</a></button>
 <button class="btn btn-outline-primary"><a href={{ path('app_test')}}>PHP</a></button>
+<button class="btn btn-outline-primary"><a href={{ path('app_instrwar')}}>Instrukcje warunkowe</a></button>
 <div class="table-container">
     <table class="responsive-table">
     <thead>
@@ -45,8 +46,7 @@
             <th class="w-auto">ID</th>
             <th class="w-auto">Lp</th>
             <th class="w-auto">Kod</th>
-            <th class="w-auto">Zdjecie</th>
-            <th class="w-auto">Dodaj zdjęcie</th>
+            <th class="w-auto">Zdjęcie</th>
             <th class="w-auto">Usuń zdjęcie</th>
             <th class="min-w-[200px]">Nazwa produktu</th>
             <th class="w-auto">Ilość</th>
@@ -69,11 +69,6 @@
                 {% if product.imageFilename %}
                     <img src="{{ asset('uploads/products/' ~ product.imageFilename) }}" alt="zdjęcie" class="max-w-[100px]">
                 {% else %}
-                    brak
-                {% endif %}
-            </td>
-            <td class="p-2">
-                {% if not product.imageFilename %}
                     <input type="file" name="product_images[{{ product.id }}]" class="auto-input">
                 {% endif %}
             </td>

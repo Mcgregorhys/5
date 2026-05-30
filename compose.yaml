@@ -8,8 +8,13 @@ services:
         SYMFONY_VERSION: 6.3.*
     container_name: 5_app
     working_dir: /var/www/html
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: 0
     volumes:
       - .:/var/www/html
+      - symfony_vendor:/var/www/html/vendor
+      - symfony_var:/var/www/html/var
     ports:
       - "8000:8000"
     networks:
@@ -47,6 +52,8 @@ services:
 
 volumes:
   mysql_data:
+  symfony_vendor:
+  symfony_var:
 
 networks:
   symfony_network:

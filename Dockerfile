@@ -6,8 +6,11 @@ RUN apk add --no-cache \
         acl \
         fcgi \
         file \
+        freetype-dev \
         gettext \
         git \
+        libjpeg-turbo-dev \
+        libpng-dev \
         mysql-client \
         unzip \
     ;
@@ -15,12 +18,16 @@ RUN apk add --no-cache \
 RUN set -eux; \
     apk add --no-cache --virtual .build-deps \
         $PHPIZE_DEPS \
+        freetype-dev \
         icu-dev \
+        libjpeg-turbo-dev \
+        libpng-dev \
         libzip-dev \
         zlib-dev \
     ; \
-    docker-php-ext-configure zip; \
+    docker-php-ext-configure gd --with-freetype --with-jpeg; \
     docker-php-ext-install -j$(nproc) \
+        gd \
         intl \
         pdo_mysql \
         zip \
@@ -42,6 +49,17 @@ RUN set -eux; \
     apk del .build-deps
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+RUN set -eux; \
+    { \
+        echo "[www]"; \
+        echo "pm = dynamic"; \
+        echo "pm.max_children = 20"; \
+        echo "pm.start_servers = 4"; \
+        echo "pm.min_spare_servers = 2"; \
+        echo "pm.max_spare_servers = 6"; \
+        echo "pm.max_requests = 500"; \
+    } > /usr/local/etc/php-fpm.d/zz-pool-tuning.conf
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
