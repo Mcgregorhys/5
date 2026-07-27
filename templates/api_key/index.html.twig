@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Klucze API{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Klucze API</h1>
+        <div>
+            <a href="{{ path('api_keys_new') }}" class="btn btn-primary">Utwórz nowy klucz</a>
+            <a href="{{ path('product_list') }}" class="btn btn-outline-secondary">Powrót do produktów</a>
+        </div>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    <div class="card mb-4">
+        <div class="card-header">Dostępne uprawnienia API</div>
+        <div class="card-body">
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>Uprawnienie</th>
+                        <th>Opis</th>
+                        <th>Endpointy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for permission in permissions %}
+                        <tr>
+                            <td><code>{{ permission.value }}</code></td>
+                            <td>{{ permission.label }}</td>
+                            <td><small class="text-muted">{{ permission.description }}</small></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Twoje klucze API</div>
+        <div class="card-body">
+            {% if apiKeys is empty %}
+                <p class="text-muted mb-0">Nie masz jeszcze żadnych kluczy API. Utwórz pierwszy klucz, aby korzystać z REST API.</p>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Nazwa</th>
+                                <th>Prefiks klucza</th>
+                                <th>Uprawnienia</th>
+                                <th>Status</th>
+                                <th>Utworzono</th>
+                                <th>Ostatnie użycie</th>
+                                <th>Akcje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for apiKey in apiKeys %}
+                                <tr>
+                                    <td>{{ apiKey.name }}</td>
+                                    <td><code>{{ apiKey.tokenPrefix }}…</code></td>
+                                    <td>
+                                        {% for perm in apiKey.permissions %}
+                                            <span class="badge bg-secondary">{{ perm }}</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% if apiKey.isActive %}
+                                            <span class="badge bg-success">Aktywny</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Nieaktywny</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ apiKey.createdAt|date('Y-m-d H:i') }}</td>
+                                    <td>{{ apiKey.lastUsedAt ? apiKey.lastUsedAt|date('Y-m-d H:i') : '—' }}</td>
+                                    <td class="text-nowrap">
+                                        <a href="{{ path('api_keys_edit', {id: apiKey.id}) }}" class="btn btn-sm btn-outline-primary">Edytuj</a>
+                                        {% if apiKey.isActive %}
+                                            <form method="post" action="{{ path('api_keys_revoke', {id: apiKey.id}) }}" class="d-inline">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('revoke' ~ apiKey.id) }}">
+                                                <button type="submit" class="btn btn-sm btn-outline-warning" onclick="return confirm('Dezaktywować ten klucz?')">Dezaktywuj</button>
+                                            </form>
+                                        {% endif %}
+                                        <form method="post" action="{{ path('api_keys_delete', {id: apiKey.id}) }}" class="d-inline">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ apiKey.id) }}">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Usunąć ten klucz na stałe?')">Usuń</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">Jak korzystać z API</div>
+        <div class="card-body">
+            <p>Wszystkie żądania wymagają nagłówka autoryzacji:</p>
+            <pre class="bg-light p-3"><code>X-API-Key: sk_twoj_klucz_api
+# lub
+Authorization: Bearer sk_twoj_klucz_api</code></pre>
+            <p class="mb-1">Przykładowe endpointy:</p>
+            <ul>
+                <li><code>GET /api/v1/products</code> — lista produktów</li>
+                <li><code>GET /api/v1/products/{id}</code> — szczegóły produktu</li>
+                <li><code>POST /api/v1/products</code> — utworzenie produktu</li>
+                <li><code>GET /api/v1/categories</code> — lista kategorii</li>
+                <li><code>POST /api/v1/categories</code> — utworzenie kategorii</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

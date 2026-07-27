@@ -23,18 +23,21 @@ class Product
 //*********************kod */
     #[ORM\Column(type: 'string', length: 20)]
     #[Assert\Length(
-        min: 6,
+        min: 1,
         max: 20,
-        minMessage: 'Kod musi mieć co najmniej {{ limit }} znaków.',
+        minMessage: 'Kod musi mieć co najmniej {{ limit }} znak.',
         maxMessage: 'Kod nie może być dłuższy niż {{ limit }} znaków.'
     )]
     #[Assert\NotBlank(message: 'Kod nie może być pusty.')]
     #[Assert\Regex(
-        pattern: '/^\d+$/',
-        message: 'Kod może zawierać tylko cyfry.'
+        pattern: '/^[a-zA-Z0-9_-]+$/',
+        message: 'Kod może zawierać tylko litery, cyfry, myślnik i podkreślenie.'
     )]
 
-    private ?string $kod = null ;
+    private ?string $kod = null;
+
+    #[ORM\Column(nullable: true, unique: true)]
+    private ?int $prestashopId = null;
 //*************end kod *********************** */
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -79,12 +82,8 @@ class Product
    /************typ wyliczeniowy shippingOption */
    
 #[ORM\Column(type: 'string', enumType: ShippingOption::class, nullable: true)]
-private  $shippingOption = null;
+private $shippingOption = null;
 
-#[ORM\ManyToOne(inversedBy: 'products')]
-#[ORM\JoinColumn(nullable: false)]
-
-// Gettery i settery
 public function getShippingOption(): ?ShippingOption
 {
     return $this->shippingOption;
@@ -295,6 +294,18 @@ public function getColorsOption(): ?ColorsOption
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getPrestashopId(): ?int
+    {
+        return $this->prestashopId;
+    }
+
+    public function setPrestashopId(?int $prestashopId): static
+    {
+        $this->prestashopId = $prestashopId;
 
         return $this;
     }

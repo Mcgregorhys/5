@@ -24,3 +24,8 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> uploaded product images ###
+/public/uploads/products/*
+!/public/uploads/products/.gitkeep
+###< uploaded product images ###

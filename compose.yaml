@@ -11,6 +11,11 @@ services:
     environment:
       APP_ENV: dev
       APP_DEBUG: 0
+      PRESTASHOP_URL: ${PRESTASHOP_URL}
+      PRESTASHOP_API_KEY: ${PRESTASHOP_API_KEY}
+      PRESTASHOP_LANG_ID: ${PRESTASHOP_LANG_ID:-1}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - .:/var/www/html
       - symfony_vendor:/var/www/html/vendor

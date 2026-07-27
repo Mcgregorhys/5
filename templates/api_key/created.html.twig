@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Klucz API utworzony{% endblock %}
+
+{% block body %}
+<div class="container mt-4" style="max-width: 800px;">
+    <h1 class="mb-4">Klucz API został utworzony</h1>
+
+    <div class="alert alert-warning">
+        <strong>Ważne!</strong> Skopiuj klucz teraz. Ze względów bezpieczeństwa nie będzie już wyświetlany ponownie.
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <p class="mb-2"><strong>Nazwa:</strong> {{ apiKey.name }}</p>
+            <p class="mb-2"><strong>Prefiks:</strong> <code>{{ apiKey.tokenPrefix }}…</code></p>
+            <p class="mb-2"><strong>Uprawnienia:</strong>
+                {% for perm in apiKey.permissions %}
+                    <span class="badge bg-secondary">{{ perm }}</span>
+                {% endfor %}
+            </p>
+            <label class="form-label mt-3"><strong>Twój klucz API:</strong></label>
+            <div class="input-group">
+                <input type="text" class="form-control font-monospace" id="api-token" value="{{ plainToken }}" readonly>
+                <button class="btn btn-outline-primary" type="button" onclick="copyToken()">Kopiuj</button>
+            </div>
+        </div>
+    </div>
+
+    <a href="{{ path('api_keys_index') }}" class="btn btn-primary">Przejdź do listy kluczy</a>
+</div>
+
+<script>
+function copyToken() {
+    const input = document.getElementById('api-token');
+    input.select();
+    input.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(input.value);
+}
+</script>
+{% endblock %}

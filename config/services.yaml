@@ -5,10 +5,10 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     product_images_directory: '%kernel.project_dir%/public/uploads/products'
+    prestashop.url: '%env(PRESTASHOP_URL)%'
+    prestashop.api_key: '%env(PRESTASHOP_API_KEY)%'
+    prestashop.lang_id: '%env(int:PRESTASHOP_LANG_ID)%'
 services:
-    App\Service\FileUploader:
-        arguments:
-            $targetDirectory: '%kernel.project_dir%/public/uploads/products'
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -22,6 +22,20 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%product_images_directory%'
+
+    App\Service\PrestaShop\PrestaShopClient:
+        arguments:
+            $prestashopUrl: '%prestashop.url%'
+            $prestashopApiKey: '%prestashop.api_key%'
+            $prestashopLangId: '%prestashop.lang_id%'
+
+    App\Controller\PrestaShopImportController:
+        arguments:
+            $prestashopUrl: '%prestashop.url%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

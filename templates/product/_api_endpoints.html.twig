@@ -1,0 +1,211 @@
+{# Sekcja endpointów API — szukaj w inspektorze: api-endpoints #}
+<div class="card mb-4" id="api-endpoints">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Endpointy REST API</strong>
+        {% if app.user %}
+            <a href="{{ path('api_keys_index') }}" class="btn btn-sm btn-outline-primary">Zarządzaj kluczami API</a>
+        {% else %}
+            <a href="{{ path('app_login') }}" class="btn btn-sm btn-outline-warning">Zaloguj się, aby utworzyć klucz API</a>
+        {% endif %}
+    </div>
+    <div class="card-body p-0">
+        <div class="p-3 bg-light border-bottom">
+            <small>
+                <strong>Ważne:</strong> <code>{id}</code> w dokumentacji to <em>placeholder</em> — w adresie wpisz prawdziwy numer, np.
+                <code>{{ url('api_products_show', {id: 5}) }}</code>, a nie dosłownie <code>.../products/{id}</code>.
+            </small>
+        </div>
+        <table class="table table-sm table-striped mb-0">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">Metoda</th>
+                    <th>Endpoint</th>
+                    <th>Opis</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>GET</code></td>
+                    <td><a href="{{ path('api_products_list') }}"><code>{{ url('api_products_list') }}</code></a></td>
+                    <td>Lista produktów</td>
+                </tr>
+                <tr>
+                    <td><code>GET</code></td>
+                    <td>
+                        {% if products is defined and products|length > 0 %}
+                            {% set exampleProduct = products|first %}
+                            <a href="{{ path('api_products_show', {id: exampleProduct.id}) }}"><code>{{ url('api_products_show', {id: exampleProduct.id}) }}</code></a>
+                            <br><small class="text-muted">Przykład dla produktu ID {{ exampleProduct.id }}</small>
+                        {% else %}
+                            <code>{{ url('api_products_list') }}/5</code>
+                            <br><small class="text-muted">Zamień <strong>5</strong> na ID produktu z tabeli powyżej</small>
+                        {% endif %}
+                    </td>
+                    <td>Szczegóły produktu</td>
+                </tr>
+                <tr>
+                    <td><code>POST</code></td>
+                    <td><code>{{ url('api_products_create') }}</code></td>
+                    <td>Nowy produkt (JSON w body)</td>
+                </tr>
+                <tr>
+                    <td><code>PUT</code></td>
+                    <td>
+                        {% if products is defined and products|length > 0 %}
+                            <code>{{ url('api_products_show', {id: products|first.id}) }}</code>
+                        {% else %}
+                            <code>{{ url('api_products_list') }}/5</code>
+                        {% endif %}
+                    </td>
+                    <td>Edycja produktu — <strong>nie działa z paska adresu</strong> (wymaga Postman/curl/testera poniżej)</td>
+                </tr>
+                <tr>
+                    <td><code>DELETE</code></td>
+                    <td>
+                        {% if products is defined and products|length > 0 %}
+                            <code>{{ url('api_products_show', {id: products|first.id}) }}</code>
+                        {% else %}
+                            <code>{{ url('api_products_list') }}/5</code>
+                        {% endif %}
+                    </td>
+                    <td>Usunięcie produktu — <strong>nie działa z paska adresu</strong></td>
+                </tr>
+                <tr>
+                    <td><code>GET</code></td>
+                    <td><a href="{{ path('api_categories_list') }}"><code>{{ url('api_categories_list') }}</code></a></td>
+                    <td>Lista kategorii</td>
+                </tr>
+                <tr>
+                    <td><code>GET</code></td>
+                    <td><code>{{ url('api_categories_list') }}/1</code></td>
+                    <td>Szczegóły kategorii (zamień 1 na ID kategorii)</td>
+                </tr>
+                <tr>
+                    <td><code>POST</code></td>
+                    <td><code>{{ url('api_categories_create') }}</code></td>
+                    <td>Nowa kategoria</td>
+                </tr>
+                <tr>
+                    <td><code>PUT</code></td>
+                    <td><code>{{ url('api_categories_list') }}/1</code></td>
+                    <td>Edycja kategorii</td>
+                </tr>
+                <tr>
+                    <td><code>DELETE</code></td>
+                    <td><code>{{ url('api_categories_list') }}/1</code></td>
+                    <td>Usunięcie kategorii</td>
+                </tr>
+            </tbody>
+        </table>
+        {% if products is defined and products|length > 0 %}
+            <div class="p-3 border-top">
+                <small><strong>Produkty w bazie — kliknij, aby otworzyć API:</strong></small>
+                <div class="mt-2">
+                    {% for product in products|slice(0, 10) %}
+                        <a class="btn btn-sm btn-outline-secondary mr-1 mb-1" href="{{ path('api_products_show', {id: product.id}) }}">
+                            ID {{ product.id }} — {{ product.nazwaProduktu|slice(0, 20) }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        {% if app.user %}
+            <div class="p-3 border-top" id="api-tester">
+                <h6 class="mb-2">Tester PUT / DELETE (zalogowany użytkownik)</h6>
+                <p class="small text-muted mb-2">
+                    Przeglądarka w pasku adresu wysyła tylko <code>GET</code>. Tutaj możesz przetestować edycję i usuwanie produktu z poziomu strony.
+                </p>
+                <div class="form-row align-items-end">
+                    <div class="form-group col-md-2">
+                        <label class="small">ID produktu</label>
+                        <input type="number" id="api-test-id" class="form-control form-control-sm" value="{{ products is defined and products|length > 0 ? products|first.id : 1 }}">
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="small">JSON do PUT (body)</label>
+                        <input type="text" id="api-test-json" class="form-control form-control-sm font-monospace" value='{"nazwaProduktu":"Zmieniona nazwa z API"}'>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="api-test-get">GET</button>
+                    <button type="button" class="btn btn-sm btn-warning" id="api-test-put">PUT</button>
+                    <button type="button" class="btn btn-sm btn-danger" id="api-test-delete">DELETE</button>
+                </div>
+                <pre id="api-test-result" class="bg-dark text-white p-2 small mb-0" style="min-height:80px; max-height:200px; overflow:auto;">Wynik pojawi się tutaj…</pre>
+            </div>
+            <script>
+            (function () {
+                const baseUrl = {{ url('api_products_list')|json_encode|raw }};
+                const result = document.getElementById('api-test-result');
+                const getId = () => document.getElementById('api-test-id').value;
+                const show = (status, body) => {
+                    result.textContent = 'HTTP ' + status + '\n\n' + body;
+                };
+                const request = async (method, withBody) => {
+                    const options = {
+                        method: method,
+                        credentials: 'same-origin',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+                    };
+                    if (withBody) {
+                        options.body = document.getElementById('api-test-json').value;
+                    }
+                    const response = await fetch(baseUrl + '/' + getId(), options);
+                    const text = await response.text();
+                    show(response.status, text || '(pusta odpowiedź — OK dla DELETE)');
+                };
+                document.getElementById('api-test-get').addEventListener('click', () => request('GET', false));
+                document.getElementById('api-test-put').addEventListener('click', () => request('PUT', true));
+                document.getElementById('api-test-delete').addEventListener('click', () => {
+                    if (confirm('Na pewno usunąć produkt ID ' + getId() + '?')) {
+                        request('DELETE', false);
+                    }
+                });
+            })();
+            </script>
+        {% endif %}
+        <div class="p-3 border-top bg-warning-light" style="background:#fff8e1;">
+            <h6 class="mb-2">Jak użyć klucza API?</h6>
+            <p class="mb-2 small">
+                Klucz API <strong>nie wpisujesz w adresie URL</strong>. Przeglądarka nie potrafi wysłać go sama — trzeba dodać go jako
+                <strong>nagłówek HTTP</strong> w każdym żądaniu (curl, Postman, kod aplikacji).
+            </p>
+            <p class="mb-1 small"><strong>Metoda 1 — test w przeglądarce (bez klucza):</strong></p>
+            <ol class="small mb-2">
+                <li>Zaloguj się: <a href="{{ path('app_login') }}">{{ url('app_login') }}</a></li>
+                <li>Po zalogowaniu otwórz w <em>tej samej</em> karcie np.
+                    {% if products is defined and products|length > 0 %}
+                        <a href="{{ path('api_products_show', {id: products|first.id}) }}">{{ url('api_products_show', {id: products|first.id}) }}</a>
+                    {% else %}
+                        <code>{{ url('api_products_list') }}</code>
+                    {% endif %}
+                </li>
+                <li>Jeśli widzisz błąd JSON — wyczyść cache: <code>docker exec 5_app php bin/console cache:clear</code> i zaloguj się ponownie.</li>
+            </ol>
+            <p class="mb-1 small"><strong>Metoda 2 — z kluczem API (Postman, terminal, integracja):</strong></p>
+
+            <p class="mb-1 small"><strong>Postman (najprościej na Windows):</strong></p>
+            <ol class="small mb-2">
+                <li>Metoda <code>GET</code>, URL: <code>{{ url('api_products_list') }}</code></li>
+                <li>Zakładka <strong>Headers</strong> → dodaj: <code>X-API-Key</code> = <code>sk_twoj_klucz</code></li>
+                <li>Kliknij <strong>Send</strong></li>
+            </ol>
+
+            <p class="mb-1 small"><strong>PUT — edycja produktu</strong> (klucz z uprawnieniem <code>products:write</code>):</p>
+            <pre class="bg-white p-2 border small mb-2"><code>curl.exe -X PUT -H "Content-Type: application/json" -H "X-API-Key: sk_twoj_klucz" -d "{\"nazwaProduktu\":\"Nowa nazwa\"}" {{ url('api_products_show', {id: products is defined and products|length > 0 ? products|first.id : 5}) }}</code></pre>
+
+            <p class="mb-1 small"><strong>DELETE — usunięcie produktu</strong> (klucz z uprawnieniem <code>products:write</code>):</p>
+            <pre class="bg-white p-2 border small mb-2"><code>curl.exe -X DELETE -H "X-API-Key: sk_twoj_klucz" {{ url('api_products_show', {id: products is defined and products|length > 0 ? products|first.id : 5}) }}</code></pre>
+
+            <p class="mb-1 small"><strong>GET — odczyt</strong> (klucz z uprawnieniem <code>products:read</code>):</p>
+            <pre class="bg-white p-2 border small mb-2"><code>curl.exe -H "X-API-Key: sk_twoj_klucz_tutaj" {{ url('api_products_list') }}</code></pre>
+
+            <p class="mb-1 small"><strong>Linux / Mac / Git Bash:</strong></p>
+            <pre class="bg-white p-2 border small mb-0"><code>curl -H "X-API-Key: sk_twoj_klucz_tutaj" {{ url('api_products_list') }}</code></pre>
+            <p class="mt-2 mb-0 small text-muted">
+                Odczyt (<code>GET</code>) wymaga uprawnienia <code>products:read</code>.
+                Edycja (<code>PUT</code>) i usuwanie (<code>DELETE</code>) wymagają <code>products:write</code> — ustawiasz przy tworzeniu klucza w
+                <a href="{{ path('api_keys_index') }}">panelu Klucze API</a>.
+            </p>
+        </div>
+    </div>
+</div>

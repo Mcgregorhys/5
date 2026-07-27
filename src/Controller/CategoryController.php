@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Form\CategoryTypeForm;
 use App\Repository\CategoryRepository;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request; // <-- to musi być
@@ -45,15 +46,21 @@ public function new(Request $request, EntityManagerInterface $em): Response
 }
 
 
-#[Route('/products', name: 'product_list')]
+#[Route('/products', name: 'products_by_category')]
 public function list(CategoryRepository $categoryRepository, ProductRepository $productRepository): Response
 {
     $products = $productRepository->findAll();
     $categories = $categoryRepository->findAll();
 
+    $totalValue = 0;
+    foreach ($products as $product) {
+        $totalValue += (float) ($product->getValue() ?? 0);
+    }
+
     return $this->render('product/list.html.twig', [
         'products' => $products,
         'categories' => $categories,
+        'totalValue' => $totalValue,
     ]);
 }
 }

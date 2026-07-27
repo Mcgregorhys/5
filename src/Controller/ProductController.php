@@ -105,26 +105,30 @@ class ProductController extends AbstractController
     //     ]);
     // }
    #[Route('/', name: 'product_list')]
-public function list(EntityManagerInterface $entityManager): Response
+public function list(Request $request, EntityManagerInterface $entityManager): Response
 {
-    // pobranie wszystkich produktów z bazy danych
-    $products = $entityManager->getRepository(Product::class)->findAll();
-    
-    // // pobranie kategorii z bazy danych
-    // $categories = $categoryRepository->findAll();
+    /** @var ProductRepository $productRepository */
+    $productRepository = $entityManager->getRepository(Product::class);
 
-    // numeracja i sumowanie wartości
-    $lp = 1;
-    $totalValue = 0;
-    foreach ($products as $product) {
-        $product->setLp($lp++);
-        $totalValue += $product->getValue();
-    }
+    $perPage = ProductRepository::ITEMS_PER_PAGE;
+    $searchQuery = trim((string) $request->query->get('q', ''));
+    $search = '' !== $searchQuery ? $searchQuery : null;
+
+    $totalProducts = $productRepository->countAll($search);
+    $totalPages = max(1, (int) ceil($totalProducts / $perPage));
+    $page = max(1, min($request->query->getInt('page', 1), $totalPages));
+
+    $products = $productRepository->findPaginated($page, $search, $perPage);
+    $totalValue = $productRepository->sumTotalValue($search);
 
     return $this->render('product/list.html.twig', [
         'products' => $products,
-        // 'categories' => $categories,
         'totalValue' => $totalValue,
+        'page' => $page,
+        'perPage' => $perPage,
+        'totalProducts' => $totalProducts,
+        'totalPages' => $totalPages,
+        'searchQuery' => $searchQuery,
     ]);
 }
 
